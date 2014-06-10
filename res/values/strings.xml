@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">Fussball</string>
+
+    <string name="hint_email">Your e-mail</string>
+    <string name="hint_password">Your password</string>
+    
+    <string name="auth_ok">OK</string>
+    
+</resources>

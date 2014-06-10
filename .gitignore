@@ -1,0 +1,7 @@
+.settings/
+.externalToolBuilders/
+.classpath
+bin/
+release/
+obj/
+gen/
