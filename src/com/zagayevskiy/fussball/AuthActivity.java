@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -63,6 +64,7 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 			@Override
 			public void onClick(View v) {
 				
+				progressDialog.setTitle(R.string.auth_in_progress);
 				progressDialog.show();
 				
 				HttpGet get = new HttpGet("http://212.154.168.144:5050/api/login");
@@ -116,8 +118,6 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 		canAuth &= password.getText().length() != 0;
 		canAuth &= api.isBound();
 		
-		Log.i(TAG, "can auth:" + canAuth);
-		
 		buttonOk.setEnabled(canAuth);
 	}
 
@@ -140,15 +140,17 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 	@Override
 	public void onHttpResponse(int requestId, String result) {
 		if(requestId == AUTH_REQUEST){
+			progressDialog.hide();
 			try{
 				JSONObject json = new JSONObject(result);
 				if(json.has(C.json.key.ACCESS_TOKEN)){
 					final String token = json.getString(C.json.key.ACCESS_TOKEN);
-					Editor editor = prefs.edit();
-					
-					editor.putString(C.prefs.key.ACCESS_TOKEN, token);
-					
+					Editor editor = prefs.edit();					
+					editor.putString(C.prefs.key.ACCESS_TOKEN, token);					
 					editor.commit();
+					
+					startActivity(new Intent(this, MainActivity.class));
+					finish();
 					
 				}else{
 					Toast.makeText(this, json.getString(C.json.key.MESSAGE), Toast.LENGTH_SHORT).show();
@@ -157,7 +159,6 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 				Log.e(TAG, "JSONException", e);
 				Toast.makeText(this, "Auth failed: can not parse json", Toast.LENGTH_SHORT).show();
 			}
-			progressDialog.hide();
 		}
 	}
 

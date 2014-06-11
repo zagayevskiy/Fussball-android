@@ -7,4 +7,6 @@
     
     <string name="auth_ok">OK</string>
     
+    <string name="auth_in_progress">Authentication...</string>
+    
 </resources>

@@ -2,16 +2,29 @@ package com.zagayevskiy.fussball.service;
 
 import java.lang.ref.WeakReference;
 
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.json.JSONArray;
+import org.json.JSONException;
 
+import com.zagayevskiy.fussball.R;
+import com.zagayevskiy.fussball.User;
+import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.HttpHelper;
 import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
 
 import android.app.Service;
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.util.LruCache;
+import android.util.Log;
+import android.widget.Toast;
 
 public class HttpCacheService extends Service {
 
@@ -92,6 +105,52 @@ public class HttpCacheService extends Service {
 	@Override
 	public IBinder onBind(Intent intent) {
 		return new HttpCacheServiceBinder(this);
+	}
+	
+	public void loadUsers(){
+		
+		SharedPreferences prefs = getSharedPreferences(C.prefs.NAME, MODE_PRIVATE);
+		
+		final HttpGet getUsers = new HttpGet(getString(R.string.api_host) + "players?token=" + prefs.getString(C.prefs.key.ACCESS_TOKEN, ""));
+		
+		new HttpHelper(new IHttpEventsListener() {
+			
+			@Override
+			public void onHttpResponse(int requestId, String result) {
+				Log.e(TAG, result);
+				
+				try {
+					
+					ContentValues[] values = User.jsonToDBContentValues(result);
+					
+					ContentResolver resolver = getContentResolver();
+					resolver.delete(User.URI, null, null);
+					for(ContentValues v : values){
+						resolver.insert(User.URI, v);
+					}
+					
+					Cursor cursor = getContentResolver().query(User.URI, User.FULL_PROJECTION, null, null, null);
+					
+					while(cursor.moveToNext()){
+						Log.i(TAG, cursor.getString(cursor.getColumnIndex(User.FIELD_EMAIL)));
+					}
+					
+				} catch (JSONException e) {
+					Log.e(TAG, "Fail to parse json", e);
+					Toast.makeText(HttpCacheService.this, "Fail to parse json", Toast.LENGTH_SHORT).show();
+				}
+				
+			}
+			
+			@Override
+			public void onHttpRequestFail(int requestId, Exception ex) {
+				Log.e(TAG, "loadUsers failed", ex);
+			}
+			
+			@Override
+			public void onHttpProgressUpdate(int requestId, Integer... progress) {
+			}
+		}, getUsers, 0).execute();
 	}
 	
 	public void httpRequest(IHttpEventsListener listener, HttpUriRequest request, int requestId){

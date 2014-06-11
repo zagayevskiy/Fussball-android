@@ -82,6 +82,12 @@ public class ApiConnection implements ServiceConnection {
 		}
 	}
 	
+	public void loadUsers(){
+		if(bound){
+			service.loadUsers();
+		}
+	}
+	
 	public void httpRequest(IHttpEventsListener listener, HttpUriRequest request, int requestId){
 		if(bound){
 			service.httpRequest(listener, request, requestId);

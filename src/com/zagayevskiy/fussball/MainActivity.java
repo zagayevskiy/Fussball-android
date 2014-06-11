@@ -1,69 +1,71 @@
 package com.zagayevskiy.fussball;
 
-import java.math.BigInteger;
-import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.security.Security;
-
-import javax.crypto.KeyAgreement;
-import javax.crypto.spec.DHParameterSpec;
-
-import com.zagayevskiy.fussball.utils.C;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.app.ListActivity;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
+import android.support.v4.widget.SimpleCursorAdapter;
 
-public class MainActivity extends Activity {
+import com.zagayevskiy.fussball.service.ApiConnection;
+import com.zagayevskiy.fussball.service.ApiConnection.IBindUnbindListener;
 
-	private static BigInteger g512 = new BigInteger("1234567890", 16);
-
-	private static BigInteger p512 = new BigInteger("1234567890", 16);
-
+public class MainActivity extends ListActivity implements IBindUnbindListener, LoaderManager.LoaderCallbacks<Cursor> {
+	
+	private ApiConnection api;
+	
+	private SimpleCursorAdapter mAdapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		SharedPreferences prefs = getSharedPreferences(C.prefs.NAME, MODE_PRIVATE);
 		
-		if("".equals(prefs.getString(C.prefs.key.ACCESS_TOKEN, ""))){
-			startActivity(new Intent(this, AuthActivity.class));
-			finish();
-		}
+		String[] fromColumns = { User.FIELD_EMAIL, User.FIELD_RATING };
+        int[] toViews = {android.R.id.text1, android.R.id.text2 };
 		
-//		try {
-//			
-//			KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DH");
-//			keyGen.initialize(new DHParameterSpec(p512, g512, 512));
-//
-//			KeyAgreement aKeyAgree = KeyAgreement.getInstance("DH", "BC");
-//			KeyPair aPair = keyGen.generateKeyPair();
-//			KeyAgreement bKeyAgree = KeyAgreement.getInstance("DH", "BC");
-//			KeyPair bPair = keyGen.generateKeyPair();
-//
-//			aKeyAgree.init(aPair.getPrivate());
-//			bKeyAgree.init(bPair.getPrivate());
-//
-//			aKeyAgree.doPhase(bPair.getPublic(), true);
-//			bKeyAgree.doPhase(aPair.getPublic(), true);
-//
-//			MessageDigest hash = MessageDigest.getInstance("SHA1");
-//			
-//			Log.i("A", Base64.encodeToString(hash.digest(aKeyAgree.generateSecret()), Base64.DEFAULT));
-//			Log.i("B", Base64.encodeToString(hash.digest(bKeyAgree.generateSecret()), Base64.DEFAULT));
-//		} catch (GeneralSecurityException e) {
-//			Log.e("Security", "Exception", e);
-//		}
+        mAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2, null, fromColumns, toViews, 0);
+        setListAdapter(mAdapter);
+        getLoaderManager().initLoader(0, null, this);  
+        
+	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		api = new ApiConnection(this, this);
+		api.bind();
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		api.unbind();
+	}
+	
+	@Override
+	public void onApiBind() {
+		api.loadUsers();	
+	}
+
+	@Override
+	public void onApiUnbind() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return new CursorLoader(this, User.URI, User.FULL_PROJECTION, null, null, null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		mAdapter.swapCursor(data);	
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mAdapter.swapCursor(null);
 	}
 }

@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name="MainActivity" >
+        <activity android:name="com.zagayevskiy.fussball.SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,11 +25,21 @@
             android:name="com.zagayevskiy.fussball.AuthActivity"
             android:exported="false" >
         </activity>
+        <activity
+            android:name="com.zagayevskiy.fussball.MainActivity"
+            android:exported="false" >
+        </activity>
 
         <service
             android:name="com.zagayevskiy.fussball.service.HttpCacheService"
             android:exported="false" >
         </service>
+
+        <provider
+            android:name="com.zagayevskiy.fussball.db.DBProvider"
+            android:authorities="com.zagayevskiy.fussball.db"
+            android:exported="false" />
+        
     </application>
 
 </manifest>
