@@ -67,7 +67,7 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 				progressDialog.setTitle(R.string.auth_in_progress);
 				progressDialog.show();
 				
-				HttpGet get = new HttpGet("http://212.154.168.144:5050/api/login");
+				HttpGet get = new HttpGet(C.api.url.LOGIN);
 				final Header authHeader = BasicScheme.authenticate(
 										new UsernamePasswordCredentials(
 												email.getText().toString(),
@@ -143,8 +143,8 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 			progressDialog.hide();
 			try{
 				JSONObject json = new JSONObject(result);
-				if(json.has(C.json.key.ACCESS_TOKEN)){
-					final String token = json.getString(C.json.key.ACCESS_TOKEN);
+				if(json.has(C.api.json.key.ACCESS_TOKEN)){
+					final String token = json.getString(C.api.json.key.ACCESS_TOKEN);
 					Editor editor = prefs.edit();					
 					editor.putString(C.prefs.key.ACCESS_TOKEN, token);					
 					editor.commit();
@@ -153,7 +153,7 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 					finish();
 					
 				}else{
-					Toast.makeText(this, json.getString(C.json.key.MESSAGE), Toast.LENGTH_SHORT).show();
+					Toast.makeText(this, json.getString(C.api.json.key.MESSAGE), Toast.LENGTH_SHORT).show();
 				}
 			}catch(JSONException e){
 				Log.e(TAG, "JSONException", e);

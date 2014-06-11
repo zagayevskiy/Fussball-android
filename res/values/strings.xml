@@ -9,4 +9,6 @@
     
     <string name="auth_in_progress">Authentication...</string>
     
+    <string name="tab_users">Users</string>
+    
 </resources>

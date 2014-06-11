@@ -1,71 +1,54 @@
 package com.zagayevskiy.fussball;
 
-import android.app.ListActivity;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
+import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 
 import com.zagayevskiy.fussball.service.ApiConnection;
 import com.zagayevskiy.fussball.service.ApiConnection.IBindUnbindListener;
+import com.zagayevskiy.fussball.tabs.TabsPagerAdapter;
 
-public class MainActivity extends ListActivity implements IBindUnbindListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends FragmentActivity implements IBindUnbindListener {
 	
-	private ApiConnection api;
-	
-	private SimpleCursorAdapter mAdapter;
+	private ApiConnection mApi;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		String[] fromColumns = { User.FIELD_EMAIL, User.FIELD_RATING };
-        int[] toViews = {android.R.id.text1, android.R.id.text2 };
-		
-        mAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2, null, fromColumns, toViews, 0);
-        setListAdapter(mAdapter);
-        getLoaderManager().initLoader(0, null, this);  
+		setContentView(R.layout.main_activity);
         
+		ViewPager pager = (ViewPager) findViewById(R.id.pager);
+		ActionBar actionBar = getActionBar();
+		TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(actionBar, getSupportFragmentManager(), pager);
+		pager.setAdapter(tabsPagerAdapter);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		
+		tabsPagerAdapter
+    		.addTab(actionBar.newTab().setText(R.string.tab_users), UsersFragment.class)
+			;
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		api = new ApiConnection(this, this);
-		api.bind();
+		mApi = new ApiConnection(this, this);
+		mApi.bind();
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
-		api.unbind();
+		mApi.unbind();
 	}
 	
 	@Override
 	public void onApiBind() {
-		api.loadUsers();	
+		mApi.loadUsers();	
 	}
 
 	@Override
 	public void onApiUnbind() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new CursorLoader(this, User.URI, User.FULL_PROJECTION, null, null, null);
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		mAdapter.swapCursor(data);	
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-		mAdapter.swapCursor(null);
 	}
 }

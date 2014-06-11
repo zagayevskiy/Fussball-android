@@ -4,17 +4,9 @@ import java.lang.ref.WeakReference;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.zagayevskiy.fussball.R;
-import com.zagayevskiy.fussball.User;
-import com.zagayevskiy.fussball.utils.C;
-import com.zagayevskiy.fussball.utils.HttpHelper;
-import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
-
 import android.app.Service;
-import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -25,6 +17,11 @@ import android.os.IBinder;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.zagayevskiy.fussball.User;
+import com.zagayevskiy.fussball.utils.C;
+import com.zagayevskiy.fussball.utils.HttpHelper;
+import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
 
 public class HttpCacheService extends Service {
 
@@ -111,7 +108,7 @@ public class HttpCacheService extends Service {
 		
 		SharedPreferences prefs = getSharedPreferences(C.prefs.NAME, MODE_PRIVATE);
 		
-		final HttpGet getUsers = new HttpGet(getString(R.string.api_host) + "players?token=" + prefs.getString(C.prefs.key.ACCESS_TOKEN, ""));
+		final HttpGet getUsers = new HttpGet(C.api.url.PLAYERS + prefs.getString(C.prefs.key.ACCESS_TOKEN, ""));
 		
 		new HttpHelper(new IHttpEventsListener() {
 			
