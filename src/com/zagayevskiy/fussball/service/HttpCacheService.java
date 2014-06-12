@@ -1,10 +1,15 @@
 package com.zagayevskiy.fussball.service;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Service;
 import android.content.ContentResolver;
@@ -22,6 +27,7 @@ import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.AsyncHttpHelper;
 import com.zagayevskiy.fussball.utils.AsyncHttpHelper.IHttpEventsListener;
+import com.zagayevskiy.fussball.utils.C.prefs;
 
 public class HttpCacheService extends Service {
 
@@ -75,6 +81,7 @@ public class HttpCacheService extends Service {
 
 		@Override
 		public void onHttpResponse(int requestId, String result) {
+			Log.i(TAG, result);
 			putToCache(request, result);
 			IHttpEventsListener l = outListenerRef.get();
 			if(l != null){
@@ -127,11 +134,15 @@ public class HttpCacheService extends Service {
 					}				
 
 					Log.i(TAG, "loaded");
-					l.onHttpResponse(requestId, "");
+					if(l != null){
+						l.onHttpResponse(requestId, "");
+					}
 				} catch (JSONException e) {
 					Log.e(TAG, "Fail to parse json", e);
 					Toast.makeText(HttpCacheService.this, "Fail to parse json", Toast.LENGTH_SHORT).show();
-					l.onHttpRequestFail(requestId, e);
+					if(l != null){
+						l.onHttpRequestFail(requestId, e);
+					}
 				}
 				
 			}
@@ -148,10 +159,35 @@ public class HttpCacheService extends Service {
 		}, getUsers, requestId).execute();
 	}
 	
+	public void newGame(Player player1, Player player2, int score1, int score2){
+		final SharedPreferences prefs = getSharedPreferences(C.prefs.NAME, MODE_PRIVATE);
+		final String url = C.api.url.NEW_GAME + prefs.getString(C.prefs.key.ACCESS_TOKEN, "");
+		
+		try{
+			JSONObject json = new JSONObject()
+				.put("date", System.currentTimeMillis())
+				.put("player1", player1.getEmail())
+				.put("player2", player2.getEmail())
+			    .put("scoreOfPlayer1", score1)
+			    .put("scoreOfPlayer2", score2);		   
+	
+			HttpPost post = new HttpPost(url);
+			StringEntity entity = new StringEntity(json.toString(), "UTF-8");
+			Log.i(TAG, json.toString(4));
+			entity.setContentType("application/json");
+			post.setEntity(entity);
+			httpRequestWithoutCache(null, post, 0);
+		}catch(JSONException ignored){			
+		}catch(UnsupportedEncodingException ignored) {
+		}
+	}
+	
 	public void httpRequest(IHttpEventsListener listener, HttpUriRequest request, int requestId){
 		String response = getFromCache(request);
 		if(response != null){
-			listener.onHttpResponse(requestId, response);
+			if(listener != null){
+				listener.onHttpResponse(requestId, response);
+			}
 			return;
 		}
 		

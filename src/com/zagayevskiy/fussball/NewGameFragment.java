@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class NewGameFragment extends Fragment implements View.OnClickListener {
 
@@ -17,6 +18,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener {
 	private static final int REQUEST_SELECT_PLAYER2 = 2;
 	
 	private Button selectPlayer1, selectPlayer2, buttonOk;
+	private EditText score1, score2;
 	
 	private Player player1, player2;
 	
@@ -28,6 +30,9 @@ public class NewGameFragment extends Fragment implements View.OnClickListener {
 		selectPlayer1 = (Button) v.findViewById(R.id.select_player1);
 		selectPlayer2 = (Button) v.findViewById(R.id.select_player2);
 		buttonOk = (Button) v.findViewById(R.id.ok);
+		
+		score1 = (EditText) v.findViewById(R.id.player1_score);
+		score2 = (EditText) v.findViewById(R.id.player2_score);
 		
 		selectPlayer1.setOnClickListener(this);
 		selectPlayer2.setOnClickListener(this);
@@ -63,7 +68,9 @@ public class NewGameFragment extends Fragment implements View.OnClickListener {
 			}
 			startActivityForResult(intent, requestCode);
 		}else if(id == R.id.ok){
-			//TODO: send request
+			final int s1 = Integer.parseInt(score1.getText().toString());
+			final int s2 = Integer.parseInt(score2.getText().toString());
+			((MainActivity) getActivity()).getApi().newGame(player1, player2, s1, s2);
 		}
 	}
 	
