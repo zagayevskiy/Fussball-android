@@ -5,7 +5,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.zagayevskiy.fussball.User;
+import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.utils.C;
 
 public class DBAdapter {
@@ -23,11 +23,11 @@ public class DBAdapter {
 		private static final int DATABASE_VERSION = 1;
 		
 		private static final String TABLE_USERS_CREATE = "CREATE TABLE IF NOT EXISTS "
-			+ User.TABLE_NAME
+			+ Player.TABLE_NAME
 			+ " ("
-				+ User.FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ User.FIELD_EMAIL + " TEXT UNIQUE NOT NULL,"
-				+ User.FIELD_RATING + " DOUBLE NOT NULL"
+				+ Player.FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ Player.FIELD_EMAIL + " TEXT UNIQUE NOT NULL,"
+				+ Player.FIELD_RATING + " DOUBLE NOT NULL"
 			+ ");";
 		
 		

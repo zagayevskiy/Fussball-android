@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.v4.database.DatabaseUtilsCompat;
 
-import com.zagayevskiy.fussball.User;
+import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.db.DBAdapter.DatabaseHelper;
 import com.zagayevskiy.fussball.utils.C;
 
@@ -31,17 +31,17 @@ public class DBProvider extends ContentProvider {
 		// Create and initialize URI matcher.
 		URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
-		URI_MATCHER.addURI(C.db.AUTHORITY, User.TABLE_NAME, USERS);
-		URI_MATCHER.addURI(C.db.AUTHORITY, User.TABLE_NAME + "/#", USERS_ID);
+		URI_MATCHER.addURI(C.db.AUTHORITY, Player.TABLE_NAME, USERS);
+		URI_MATCHER.addURI(C.db.AUTHORITY, Player.TABLE_NAME + "/#", USERS_ID);
 	}
 
 	@Override
 	public String getType(Uri uri) {
 		switch (URI_MATCHER.match(uri)) {
 		case USERS:
-			return User.CONTENT_TYPE;
+			return Player.CONTENT_TYPE;
 		case USERS_ID:
-			return User.CONTENT_ITEM_TYPE;
+			return Player.CONTENT_ITEM_TYPE;
 		default:
 			throw new IllegalArgumentException(UNKNOWN_URI_LOG + uri);
 		}
@@ -66,12 +66,12 @@ public class DBProvider extends ContentProvider {
 		switch (matched) {
 
 		case USERS:
-			count = db.delete(User.TABLE_NAME, where, whereArgs);
+			count = db.delete(Player.TABLE_NAME, where, whereArgs);
 			break;
 
 		case USERS_ID:
-			finalWhere = DatabaseUtilsCompat.concatenateWhere(User.FIELD_ID + " = " + ContentUris.parseId(uri), where);
-			count = db.delete(User.TABLE_NAME, finalWhere, whereArgs);
+			finalWhere = DatabaseUtilsCompat.concatenateWhere(Player.FIELD_ID + " = " + ContentUris.parseId(uri), where);
+			count = db.delete(Player.TABLE_NAME, finalWhere, whereArgs);
 			break;
 
 		default:
@@ -93,8 +93,8 @@ public class DBProvider extends ContentProvider {
 
 		case USERS:
 		case USERS_ID:
-			matchedTable = User.TABLE_NAME;
-			baseInsertedUri = User.URI_BASE;
+			matchedTable = Player.TABLE_NAME;
+			baseInsertedUri = Player.URI_BASE;
 			break;
 
 		default:
@@ -148,12 +148,12 @@ public class DBProvider extends ContentProvider {
 		switch (type) {
 
 		case USERS:
-			qb.setTables(User.TABLE_NAME);
+			qb.setTables(Player.TABLE_NAME);
 			break;
 
 		case USERS_ID:
-			qb.setTables(User.TABLE_NAME);
-			qb.appendWhere(User.FIELD_ID + "=?");
+			qb.setTables(Player.TABLE_NAME);
+			qb.appendWhere(Player.FIELD_ID + "=?");
 			finalSelectionArgs = DatabaseUtilsCompat.appendSelectionArgs(
 					selectionArgs, new String[] { uri.getLastPathSegment() });
 			break;
@@ -181,13 +181,13 @@ public class DBProvider extends ContentProvider {
 
 		switch (matched) {
 		case USERS:
-			count = db.update(User.TABLE_NAME, values, where, whereArgs);
+			count = db.update(Player.TABLE_NAME, values, where, whereArgs);
 			break;
 
 		case USERS_ID:
-			finalWhere = DatabaseUtilsCompat.concatenateWhere(User.FIELD_ID
+			finalWhere = DatabaseUtilsCompat.concatenateWhere(Player.FIELD_ID
 					+ " = " + ContentUris.parseId(uri), where);
-			count = db.update(User.TABLE_NAME, values, finalWhere, whereArgs);
+			count = db.update(Player.TABLE_NAME, values, finalWhere, whereArgs);
 			break;
 
 		default:

@@ -26,7 +26,8 @@ public class MainActivity extends FragmentActivity implements IBindUnbindListene
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		
 		tabsPagerAdapter
-    		.addTab(actionBar.newTab().setText(R.string.tab_users), UsersFragment.class)
+    		.addTab(actionBar.newTab().setText(R.string.tab_players), UsersFragment.class)
+    		.addTab(actionBar.newTab().setText(R.string.tab_new_game), NewGameFragment.class)
 			;
 	}
 
@@ -45,7 +46,7 @@ public class MainActivity extends FragmentActivity implements IBindUnbindListene
 	
 	@Override
 	public void onApiBind() {
-		mApi.loadUsers();	
+//		mApi.loadUsers();	
 	}
 
 	@Override

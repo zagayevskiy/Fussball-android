@@ -13,7 +13,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class HttpHelper extends AsyncTask<Void, Integer, String>{
+public class AsyncHttpHelper extends AsyncTask<Void, Integer, String>{
 
 	public interface IHttpEventsListener{
     	void onHttpProgressUpdate(int requestId, Integer... progress);
@@ -21,7 +21,7 @@ public class HttpHelper extends AsyncTask<Void, Integer, String>{
     	void onHttpRequestFail(int requestId, Exception ex);
     }
 	
-	private static final String TAG = HttpHelper.class.getName();
+	private static final String TAG = AsyncHttpHelper.class.getName();
 
 	private final IHttpEventsListener listener;
 	private final HttpUriRequest request;
@@ -29,7 +29,7 @@ public class HttpHelper extends AsyncTask<Void, Integer, String>{
 	
 	private Exception executeException;
 	
-	public HttpHelper(IHttpEventsListener listener, HttpUriRequest request, int requestId){
+	public AsyncHttpHelper(IHttpEventsListener listener, HttpUriRequest request, int requestId){
 		this.listener = listener;
 		this.request = request;
 		this.requestId = requestId;
@@ -37,36 +37,18 @@ public class HttpHelper extends AsyncTask<Void, Integer, String>{
 	
 	@Override
 	protected String doInBackground(Void... unused) {
-    	StringBuffer resultBuffer = new StringBuffer("");
-        BufferedReader bufferedReader = null;
+		
+		String result;
+		
         try {
-            HttpClient httpClient = new DefaultHttpClient();                 
-
-            HttpResponse httpResponse = httpClient.execute(request);
-            InputStream inputStream = httpResponse.getEntity().getContent();
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String readLine = bufferedReader.readLine();
-            while (readLine != null) {
-                resultBuffer.append(readLine);
-                resultBuffer.append("\n");
-                readLine = bufferedReader.readLine();
-            }
-        } catch (Exception e) {
+           result = httpRequest(request);
+        } catch (IOException e) {
         	Log.e(TAG, "Network exception", e);
         	executeException = e;
         	return null;
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                	Log.e(TAG, "I/O exception", e);                	
-                }
-            }
         }
         
-		return resultBuffer.toString();
+		return result;
 	}
 	
 	@Override
@@ -85,5 +67,34 @@ public class HttpHelper extends AsyncTask<Void, Integer, String>{
 				listener.onHttpResponse(requestId, result);
 			}
 		}
+	}
+	
+	public static final String httpRequest(HttpUriRequest request) throws IOException{
+		StringBuffer resultBuffer = new StringBuffer("");
+        BufferedReader bufferedReader = null;
+        try {
+            HttpClient httpClient = new DefaultHttpClient();                 
+
+            HttpResponse httpResponse = httpClient.execute(request);
+            InputStream inputStream = httpResponse.getEntity().getContent();
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+            String readLine = bufferedReader.readLine();
+            while (readLine != null) {
+                resultBuffer.append(readLine);
+                resultBuffer.append("\n");
+                readLine = bufferedReader.readLine();
+            }
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                	Log.e(TAG, "I/O exception", e);                	
+                }
+            }
+        }
+        
+		return resultBuffer.toString();
 	}
 }

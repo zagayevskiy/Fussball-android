@@ -18,7 +18,7 @@ public class UsersFragment extends ListFragment implements LoaderManager.LoaderC
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		String[] fromColumns = { User.FIELD_EMAIL, User.FIELD_RATING };
+		String[] fromColumns = { Player.FIELD_EMAIL, Player.FIELD_RATING };
         int[] toViews = {android.R.id.text1, android.R.id.text2 };
 		
         mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null, fromColumns, toViews, 0);
@@ -29,7 +29,7 @@ public class UsersFragment extends ListFragment implements LoaderManager.LoaderC
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new CursorLoader(getActivity(), User.URI, User.FULL_PROJECTION, null, null, null);
+		return new CursorLoader(getActivity(), Player.URI, Player.FULL_PROJECTION, null, null, null);
 	}
 
 	@Override

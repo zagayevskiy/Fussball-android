@@ -29,6 +29,10 @@
             android:name="com.zagayevskiy.fussball.MainActivity"
             android:exported="false" >
         </activity>
+        <activity
+            android:name="com.zagayevskiy.fussball.SearchPlayerActivity"
+            android:exported="false" >
+        </activity>
 
         <service
             android:name="com.zagayevskiy.fussball.service.HttpCacheService"
@@ -39,7 +43,6 @@
             android:name="com.zagayevskiy.fussball.db.DBProvider"
             android:authorities="com.zagayevskiy.fussball.db"
             android:exported="false" />
-        
     </application>
 
 </manifest>

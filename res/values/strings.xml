@@ -2,13 +2,20 @@
 
     <string name="app_name">Fussball</string>
 
-    <string name="hint_email">Your e-mail</string>
+    <string name="hint_email">Your email</string>
     <string name="hint_password">Your password</string>
+    <string name="hint_player1_score">Player #1 score</string>
+    <string name="hint_player2_score">Player #2 score</string>
     
-    <string name="auth_ok">OK</string>
+    <string name="ok">OK</string>
     
     <string name="auth_in_progress">Authentication...</string>
     
-    <string name="tab_users">Users</string>
+    <string name="tab_players">Players</string>
+    <string name="tab_new_game">New game</string>
+    
+    <string name="select_player">Select player</string>
+    <string name="select_player1">Select player #1</string>
+    <string name="select_player2">Select player #2</string>
     
 </resources>

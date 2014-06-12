@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import com.zagayevskiy.fussball.service.HttpCacheService.HttpCacheServiceBinder;
-import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
+import com.zagayevskiy.fussball.utils.AsyncHttpHelper.IHttpEventsListener;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -82,9 +82,9 @@ public class ApiConnection implements ServiceConnection {
 		}
 	}
 	
-	public void loadUsers(){
+	public void loadPlayers(IHttpEventsListener listener, int requestId){
 		if(bound){
-			service.loadUsers();
+			service.loadPlayers(listener, requestId);
 		}
 	}
 	

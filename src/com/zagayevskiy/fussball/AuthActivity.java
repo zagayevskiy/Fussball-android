@@ -24,13 +24,14 @@ import android.widget.Toast;
 import com.zagayevskiy.fussball.service.ApiConnection;
 import com.zagayevskiy.fussball.service.ApiConnection.IBindUnbindListener;
 import com.zagayevskiy.fussball.utils.C;
-import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
+import com.zagayevskiy.fussball.utils.AsyncHttpHelper.IHttpEventsListener;
 
 public class AuthActivity extends Activity implements TextWatcher, IBindUnbindListener, IHttpEventsListener {
 	
 	public static final String TAG = AuthActivity.class.getSimpleName();
 	
 	private static final int AUTH_REQUEST = 1;
+	private static final int LOAD_PLAYERS_REQUEST = 2;
 	
 	private EditText email, password;
 	private View buttonOk;
@@ -67,10 +68,14 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 				progressDialog.setTitle(R.string.auth_in_progress);
 				progressDialog.show();
 				
+				final String emailStr = email.getText().toString();
+				
+				Player.setOwnerEmail(AuthActivity.this, emailStr);
+				
 				HttpGet get = new HttpGet(C.api.url.LOGIN);
 				final Header authHeader = BasicScheme.authenticate(
 										new UsernamePasswordCredentials(
-												email.getText().toString(),
+												emailStr,
 												password.getText().toString()), HTTP.UTF_8, false);
 				get.addHeader(authHeader);
 				
@@ -148,10 +153,8 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 					Editor editor = prefs.edit();					
 					editor.putString(C.prefs.key.ACCESS_TOKEN, token);					
 					editor.commit();
-					
-					startActivity(new Intent(this, MainActivity.class));
-					finish();
-					
+					Log.i(TAG, "auth success:" + token);
+					api.loadPlayers(this, LOAD_PLAYERS_REQUEST);					
 				}else{
 					Toast.makeText(this, json.getString(C.api.json.key.MESSAGE), Toast.LENGTH_SHORT).show();
 				}
@@ -160,14 +163,17 @@ public class AuthActivity extends Activity implements TextWatcher, IBindUnbindLi
 				Toast.makeText(this, "Auth failed: can not parse json", Toast.LENGTH_SHORT).show();
 			}
 		}
+		if(requestId == LOAD_PLAYERS_REQUEST){
+			startActivity(new Intent(this, MainActivity.class));
+			finish();
+		}
 	}
 
 	@Override
 	public void onHttpRequestFail(int requestId, Exception ex) {
-		if(requestId == AUTH_REQUEST){
+		if(requestId == AUTH_REQUEST || requestId == LOAD_PLAYERS_REQUEST){
 			progressDialog.hide();
 			Toast.makeText(this, "Auth failed: can not connect to server", Toast.LENGTH_SHORT).show();
 		}
 	}
-	
 }
