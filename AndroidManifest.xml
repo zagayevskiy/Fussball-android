@@ -35,7 +35,7 @@
         </activity>
 
         <service
-            android:name="com.zagayevskiy.fussball.service.HttpCacheService"
+            android:name="com.zagayevskiy.fussball.api.ApiService"
             android:exported="false" >
         </service>
 

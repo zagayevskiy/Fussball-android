@@ -1,9 +1,7 @@
-package com.zagayevskiy.fussball.service;
+package com.zagayevskiy.fussball.api;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -16,86 +14,44 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Binder;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
-import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.utils.C;
-import com.zagayevskiy.fussball.utils.AsyncHttpHelper;
-import com.zagayevskiy.fussball.utils.AsyncHttpHelper.IHttpEventsListener;
-import com.zagayevskiy.fussball.utils.C.prefs;
+import com.zagayevskiy.fussball.utils.HttpHelper.AsyncHttpTask;
+import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
 
-public class HttpCacheService extends Service {
+public class ApiService extends Service {
 
-	public static final String TAG = HttpCacheService.class.getName();
-	
-	/*
-	 * Use 1/16th of the available memory for this memory cache.
-	 */
-	private static final int MAX_MEMORY_KB = (int) (Runtime.getRuntime().maxMemory() / 1024);
-	private static final int MAX_CACHE_SIZE_KB = MAX_MEMORY_KB / 16;
-	private LruCache<String, String> memoryCache = new LruCache<String, String>(MAX_CACHE_SIZE_KB){
-		protected int sizeOf(String key, String value) {
-			/*
-			 * Magic formula to compute size of used memory in Kb;
-			 */
-			final int size = 8 * (int) ((((value.length()) * 2) + 45) / 8) / 1024; 
-			return size == 0 ? 1 : size;
-		};
-	};
-	
+	public static final String TAG = ApiService.class.getName();
+
 	public static class HttpCacheServiceBinder extends Binder{
 		
-		private final HttpCacheService service;
+		private final ApiService service;
 		
-		public HttpCacheServiceBinder(HttpCacheService service){
+		public HttpCacheServiceBinder(ApiService service){
 			this.service = service;
 		}
 		
-		public HttpCacheService getService(){
+		public ApiService getService(){
 			return service;
 		}
 	}
 	
-	private class HttpListener implements IHttpEventsListener{
-
-		private final WeakReference<IHttpEventsListener> outListenerRef;
-		private final HttpUriRequest request;
-		
-		public HttpListener(IHttpEventsListener outListener, HttpUriRequest request){
-			outListenerRef = new WeakReference<IHttpEventsListener>(outListener);
-			this.request = request;
-		}
-		
-		@Override
-		public void onHttpProgressUpdate(int requestId, Integer... progress) {
-			IHttpEventsListener l = outListenerRef.get();
-			if(l != null){
-				l.onHttpProgressUpdate(requestId, progress);
-			}
-		}
-
-		@Override
-		public void onHttpResponse(int requestId, String result) {
-			Log.i(TAG, result);
-			putToCache(request, result);
-			IHttpEventsListener l = outListenerRef.get();
-			if(l != null){
-				l.onHttpResponse(requestId, result);
-			}
-		}
-
-		@Override
-		public void onHttpRequestFail(int requestId, Exception ex) {
-			IHttpEventsListener l = outListenerRef.get();
-			if(l != null){
-				l.onHttpRequestFail(requestId, ex);
-			}
-		}
+	private HandlerThread mWorkerThread;
+	private Handler mWorkerHandler;
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		mWorkerThread = new HandlerThread(TAG);
+		mWorkerThread.start();
+		mWorkerHandler = new Handler(mWorkerThread.getLooper());		
 	}
 	
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -117,7 +73,7 @@ public class HttpCacheService extends Service {
 		
 		final HttpGet getUsers = new HttpGet(C.api.url.PLAYERS + prefs.getString(C.prefs.key.ACCESS_TOKEN, ""));
 		final IHttpEventsListener l = listener;
-		new AsyncHttpHelper(new IHttpEventsListener() {
+		new AsyncHttpTask(new IHttpEventsListener() {
 			
 			@Override
 			public void onHttpResponse(int requestId, String result) {
@@ -139,7 +95,7 @@ public class HttpCacheService extends Service {
 					}
 				} catch (JSONException e) {
 					Log.e(TAG, "Fail to parse json", e);
-					Toast.makeText(HttpCacheService.this, "Fail to parse json", Toast.LENGTH_SHORT).show();
+					Toast.makeText(ApiService.this, "Fail to parse json", Toast.LENGTH_SHORT).show();
 					if(l != null){
 						l.onHttpRequestFail(requestId, e);
 					}
@@ -183,35 +139,15 @@ public class HttpCacheService extends Service {
 	}
 	
 	public void httpRequest(IHttpEventsListener listener, HttpUriRequest request, int requestId){
-		String response = getFromCache(request);
-		if(response != null){
-			if(listener != null){
-				listener.onHttpResponse(requestId, response);
-			}
-			return;
-		}
-		
-		new AsyncHttpHelper(new HttpListener(listener, request), request, requestId).execute();
+		new AsyncHttpTask(listener, request, requestId).execute();
 	}
 	
 	public void httpRequestWithoutCache(IHttpEventsListener listener, HttpUriRequest request, int requestId) {
-		new AsyncHttpHelper(listener, request, requestId).execute();
+		new AsyncHttpTask(listener, request, requestId).execute();
 	}
 	
-	private void putToCache(HttpUriRequest request, String response){
-		final String key = getKey(request);
-		if(memoryCache.get(key) != null){
-			memoryCache.remove(key);
-		}
-		memoryCache.put(key, response);
+	public void request(ApiRequest request){
+		request.setApiService(this);
+		mWorkerHandler.post(request);
 	}
-	
-	private String getFromCache(HttpUriRequest request){
-		final String key = getKey(request);
-		return memoryCache.get(key);
-	}
-	
-	private static String getKey(HttpUriRequest request){
-		return request.getMethod() + request.getURI().toString();
-	}	
 }

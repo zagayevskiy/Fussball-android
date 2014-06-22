@@ -29,7 +29,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener {
 		
 		selectPlayer1 = (Button) v.findViewById(R.id.select_player1);
 		selectPlayer2 = (Button) v.findViewById(R.id.select_player2);
-		buttonOk = (Button) v.findViewById(R.id.ok);
+		buttonOk = (Button) v.findViewById(R.id.auth_ok);
 		
 		score1 = (EditText) v.findViewById(R.id.player1_score);
 		score2 = (EditText) v.findViewById(R.id.player2_score);
@@ -67,7 +67,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener {
 				break;
 			}
 			startActivityForResult(intent, requestCode);
-		}else if(id == R.id.ok){
+		}else if(id == R.id.auth_ok){
 			final int s1 = Integer.parseInt(score1.getText().toString());
 			final int s2 = Integer.parseInt(score2.getText().toString());
 			((MainActivity) getActivity()).getApi().newGame(player1, player2, s1, s2);

@@ -1,4 +1,4 @@
-package com.zagayevskiy.fussball.service;
+package com.zagayevskiy.fussball.api;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import com.zagayevskiy.fussball.Player;
-import com.zagayevskiy.fussball.service.HttpCacheService.HttpCacheServiceBinder;
-import com.zagayevskiy.fussball.utils.AsyncHttpHelper.IHttpEventsListener;
+import com.zagayevskiy.fussball.api.ApiService.HttpCacheServiceBinder;
+import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,10 +18,10 @@ import android.util.Log;
 
 public class ApiConnection implements ServiceConnection {
 
-	private HttpCacheService service;
-	private boolean bound = false;
-	private Context context;
-	private List<IBindUnbindListener> bindUnbindListenerList = new LinkedList<IBindUnbindListener>();
+	private ApiService mService;
+	private boolean mBound = false;
+	private Context mContext;
+	private List<IBindUnbindListener> mBindUnbindListenerList = new LinkedList<IBindUnbindListener>();
 	
 	public interface IBindUnbindListener{
 		void onApiBind();
@@ -33,27 +33,27 @@ public class ApiConnection implements ServiceConnection {
 	}
 	
 	public ApiConnection(IBindUnbindListener bindUnbindListener, Context context) {
-		this.context = context; 
-		this.bindUnbindListenerList.add(bindUnbindListener);
+		this.mContext = context; 
+		this.mBindUnbindListenerList.add(bindUnbindListener);
 	}
 	
 	public boolean isBound(){
-		return bound;
+		return mBound;
 	}
 	
 	public void addBindUnbindListener(IBindUnbindListener listener){
-		bindUnbindListenerList.add(listener);
+		mBindUnbindListenerList.add(listener);
 	}
 	
 	public void removeBindInbindListener(IBindUnbindListener listener){
-		bindUnbindListenerList.remove(listener);
+		mBindUnbindListenerList.remove(listener);
 	}
 	
 	@Override
 	public void onServiceConnected(ComponentName name, IBinder binder) {
-		service = ((HttpCacheServiceBinder) binder).getService();
-		bound = true;
-		for(IBindUnbindListener listener: bindUnbindListenerList){
+		mService = ((HttpCacheServiceBinder) binder).getService();
+		mBound = true;
+		for(IBindUnbindListener listener: mBindUnbindListenerList){
 			if(listener != null){
 				listener.onApiBind();
 			}
@@ -62,9 +62,9 @@ public class ApiConnection implements ServiceConnection {
 
 	@Override
 	public void onServiceDisconnected(ComponentName name) {
-		bound = false;
-		service = null;
-		for(IBindUnbindListener listener: bindUnbindListenerList){
+		mBound = false;
+		mService = null;
+		for(IBindUnbindListener listener: mBindUnbindListenerList){
 			if(listener != null){
 				listener.onApiUnbind();
 			}
@@ -73,37 +73,43 @@ public class ApiConnection implements ServiceConnection {
 
 	public void bind(){
 		Log.i("Api", "bind");
-		context.bindService(new Intent(context, HttpCacheService.class), this, Context.BIND_AUTO_CREATE);
+		mContext.bindService(new Intent(mContext, ApiService.class), this, Context.BIND_AUTO_CREATE);
 	}
 	
 	public void unbind(){
-		if(bound){
-			bound = false;
-			context.unbindService(this);
+		if(mBound){
+			mBound = false;
+			mContext.unbindService(this);
 		}
 	}
 	
 	public void loadPlayers(IHttpEventsListener listener, int requestId){
-		if(bound){
-			service.loadPlayers(listener, requestId);
+		if(mBound){
+			mService.loadPlayers(listener, requestId);
 		}
 	}
 	
 	public void newGame(Player player1, Player player2, int score1, int score2){
-		if(bound){
-			service.newGame(player1, player2, score1, score2);
+		if(mBound){
+			mService.newGame(player1, player2, score1, score2);
 		}
 	}
 	
 	public void httpRequest(IHttpEventsListener listener, HttpUriRequest request, int requestId){
-		if(bound){
-			service.httpRequest(listener, request, requestId);
+		if(mBound){
+			mService.httpRequest(listener, request, requestId);
 		}
 	}
 	
 	public void httpRequestWithoutCache(IHttpEventsListener listener, HttpUriRequest request, int requestId){
-		if(bound){
-			service.httpRequestWithoutCache(listener, request, requestId);
+		if(mBound){
+			mService.httpRequestWithoutCache(listener, request, requestId);
+		}
+	}
+	
+	public void request(ApiRequest request){
+		if(mBound){
+			mService.request(request);
 		}
 	}
 }

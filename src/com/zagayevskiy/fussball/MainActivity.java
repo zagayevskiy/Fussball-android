@@ -9,8 +9,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 
-import com.zagayevskiy.fussball.service.ApiConnection;
-import com.zagayevskiy.fussball.service.ApiConnection.IBindUnbindListener;
+import com.zagayevskiy.fussball.api.ApiConnection;
+import com.zagayevskiy.fussball.api.ApiConnection.IBindUnbindListener;
 import com.zagayevskiy.fussball.tabs.TabsPagerAdapter;
 
 public class MainActivity extends FragmentActivity implements IBindUnbindListener {

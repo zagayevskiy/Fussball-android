@@ -3,11 +3,14 @@
     <string name="app_name">Fussball</string>
 
     <string name="hint_email">Your email</string>
+    <string name="hint_nickname">Your nickname</string>
     <string name="hint_password">Your password</string>
     <string name="hint_player1_score">Player #1 score</string>
     <string name="hint_player2_score">Player #2 score</string>
     
     <string name="ok">OK</string>
+    <string name="enter">ENTER</string>
+    <string name="or_register">OR REGISTER</string>
     
     <string name="auth_in_progress">Authentication...</string>
     
