@@ -38,8 +38,6 @@ public class NewGameFragment extends Fragment implements View.OnClickListener {
 		selectPlayer2.setOnClickListener(this);
 		buttonOk.setOnClickListener(this);
 		
-		setPlayer1(Player.getOwner(getActivity()));
-		
 		return v;
 	}
 

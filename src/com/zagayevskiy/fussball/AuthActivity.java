@@ -70,8 +70,6 @@ public class AuthActivity extends FragmentActivity implements TextWatcher, IBind
 				
 				final String emailStr = mAuthEmail.getText().toString();
 				
-				Player.setOwnerEmail(AuthActivity.this, emailStr);
-				
 				HttpGet get = new HttpGet(C.api.url.LOGIN);
 				final Header authHeader = BasicScheme.authenticate(
 										new UsernamePasswordCredentials(

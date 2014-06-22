@@ -38,6 +38,7 @@ public class RegistrationFragment extends Fragment implements TextWatcher, Resul
 			}
 		});
 		
+		mNickname.addTextChangedListener(this);
 		mEmail.addTextChangedListener(this);
 		mPassword.addTextChangedListener(this);
 		

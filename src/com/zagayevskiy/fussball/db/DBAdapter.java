@@ -27,7 +27,8 @@ public class DBAdapter {
 			+ " ("
 				+ Player.FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
 				+ Player.FIELD_EMAIL + " TEXT UNIQUE NOT NULL,"
-				+ Player.FIELD_RATING + " DOUBLE NOT NULL"
+				+ Player.FIELD_RATING + " DOUBLE NOT NULL,"
+				+ Player.FIELD_IS_OWNER + " INTEGER"
 			+ ");";
 		
 		
