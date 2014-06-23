@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.api.ApiService.HttpCacheServiceBinder;
+import com.zagayevskiy.fussball.api.request.ApiRequest;
 import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
 
 import android.content.ComponentName;
@@ -107,9 +108,9 @@ public class ApiConnection implements ServiceConnection {
 		}
 	}
 	
-	public void request(ApiRequest request){
+	public void request(ApiRequest request, int requestCode){
 		if(mBound){
-			mService.request(request);
+			mService.request(request, requestCode);
 		}
 	}
 }

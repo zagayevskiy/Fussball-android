@@ -1,4 +1,4 @@
-package com.zagayevskiy.fussball.api;
+package com.zagayevskiy.fussball.api.request;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

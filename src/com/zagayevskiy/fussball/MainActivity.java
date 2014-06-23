@@ -5,15 +5,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 
 import com.zagayevskiy.fussball.api.ApiConnection;
 import com.zagayevskiy.fussball.api.ApiConnection.IBindUnbindListener;
+import com.zagayevskiy.fussball.api.IApiManager;
 import com.zagayevskiy.fussball.tabs.TabsPagerAdapter;
 
-public class MainActivity extends FragmentActivity implements IBindUnbindListener {
+public class MainActivity extends FragmentActivity implements IBindUnbindListener, IApiManager {
 	
 	private ApiConnection mApi;
 	
@@ -57,6 +57,7 @@ public class MainActivity extends FragmentActivity implements IBindUnbindListene
 	public void onApiUnbind() {
 	}
 	
+	@Override
 	public ApiConnection getApi(){
 		return mApi;
 	}

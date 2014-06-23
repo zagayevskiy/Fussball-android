@@ -1,8 +1,8 @@
 package com.zagayevskiy.fussball;
 
-import com.zagayevskiy.fussball.api.ApiRequest;
-import com.zagayevskiy.fussball.api.ApiRequest.ResultListener;
-import com.zagayevskiy.fussball.api.Registration;
+import com.zagayevskiy.fussball.api.request.ApiRequest;
+import com.zagayevskiy.fussball.api.request.Registration;
+import com.zagayevskiy.fussball.api.request.ApiRequest.ResultListener;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +34,7 @@ public class RegistrationFragment extends Fragment implements TextWatcher, Resul
 			
 			@Override
 			public void onClick(View v) {
-				((AuthActivity) getActivity()).getApi().request(new Registration(RegistrationFragment.this, mNickname.getText().toString(), mEmail.getText().toString(), mPassword.getText().toString()));
+				((AuthActivity) getActivity()).getApi().request(new Registration(RegistrationFragment.this, mNickname.getText().toString(), mEmail.getText().toString(), mPassword.getText().toString()), 0);
 			}
 		});
 		
@@ -72,15 +72,15 @@ public class RegistrationFragment extends Fragment implements TextWatcher, Resul
 	}
 	
 	@Override
-	public void onApiResult(int code){
-		switch(code){
+	public void onApiResult(int requestCode, int resultCode){
+		switch(resultCode){
 			case ApiRequest.SUCCESS:
 				getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
 				getActivity().finish();
 			break;
 			
 			default:
-				Toast.makeText(getActivity(), "can not register: " + code, Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "can not register: " + resultCode, Toast.LENGTH_LONG).show();
 			break;
 		}
 	}
