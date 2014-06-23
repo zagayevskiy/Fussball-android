@@ -18,11 +18,11 @@ import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.HttpHelper;
 
-public class Auth extends ApiRequest{
+public class AuthRequest extends ApiBaseRequest{
 	
 	private final String mEmail, mPassword;
 	
-	public Auth(ResultListener listener, String email, String password) {
+	public AuthRequest(ResultListener listener, String email, String password) {
 		super(listener);
 		mEmail = email;
 		mPassword = password;

@@ -15,13 +15,13 @@ import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.HttpHelper;
 
-public class Registration extends ApiRequest {
+public class RegistrationRequest extends ApiBaseRequest {
 	
-	private static final String TAG = Registration.class.getName();
+	private static final String TAG = RegistrationRequest.class.getName();
 	
 	private final String mNickname, mEmail, mPassword;
 	
-	public Registration(ResultListener listener, String nickname, String email, String password){
+	public RegistrationRequest(ResultListener listener, String nickname, String email, String password){
 		super(listener);
 		mNickname = nickname;
 		mEmail = email;

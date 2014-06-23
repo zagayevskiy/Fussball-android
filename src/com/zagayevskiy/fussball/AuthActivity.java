@@ -12,10 +12,10 @@ import android.widget.EditText;
 import com.zagayevskiy.fussball.api.ApiConnection;
 import com.zagayevskiy.fussball.api.ApiConnection.IBindUnbindListener;
 import com.zagayevskiy.fussball.api.IApiManager;
-import com.zagayevskiy.fussball.api.request.ApiRequest;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
 import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
-import com.zagayevskiy.fussball.api.request.ApiRequest.ResultListener;
-import com.zagayevskiy.fussball.api.request.Auth;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
+import com.zagayevskiy.fussball.api.request.AuthRequest;
 
 public class AuthActivity extends FragmentActivity implements TextWatcher, IBindUnbindListener, IApiManager, ResultListener {
 	
@@ -57,7 +57,7 @@ public class AuthActivity extends FragmentActivity implements TextWatcher, IBind
 				
 				final String emailStr = mAuthEmail.getText().toString();
 				
-				getApi().request(new Auth(AuthActivity.this, emailStr, mAuthPassword.getText().toString()), AUTH_REQUEST);
+				getApi().request(new AuthRequest(AuthActivity.this, emailStr, mAuthPassword.getText().toString()), AUTH_REQUEST);
 				
 			}
 		});
@@ -124,7 +124,7 @@ public class AuthActivity extends FragmentActivity implements TextWatcher, IBind
 	@Override
 	public void onApiResult(int requestCode, int resultCode) {
 		mProgressDialog.cancel();
-		if(requestCode == AUTH_REQUEST && resultCode == ApiRequest.SUCCESS){
+		if(requestCode == AUTH_REQUEST && resultCode == ApiBaseRequest.SUCCESS){
 			mApi.request(new LoadPlayersRequest(null), 0);
 			startActivity(new Intent(this, MainActivity.class));
 			finish();

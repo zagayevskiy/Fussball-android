@@ -22,7 +22,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.zagayevskiy.fussball.Player;
-import com.zagayevskiy.fussball.api.request.ApiRequest;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
 import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.HttpHelper.AsyncHttpTask;
 import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
@@ -99,7 +99,7 @@ public class ApiService extends Service {
 		new AsyncHttpTask(listener, request, requestId).execute();
 	}
 	
-	public void request(ApiRequest request, int requestCode){
+	public void request(ApiBaseRequest request, int requestCode){
 		request.setApiService(this);
 		request.setRequestCode(requestCode);
 		mWorkerHandler.post(request);

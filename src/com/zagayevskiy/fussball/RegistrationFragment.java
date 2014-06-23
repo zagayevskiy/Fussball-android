@@ -1,10 +1,10 @@
 package com.zagayevskiy.fussball;
 
 import com.zagayevskiy.fussball.api.IApiManager;
-import com.zagayevskiy.fussball.api.request.ApiRequest;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
 import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
-import com.zagayevskiy.fussball.api.request.Registration;
-import com.zagayevskiy.fussball.api.request.ApiRequest.ResultListener;
+import com.zagayevskiy.fussball.api.request.RegistrationRequest;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 public class RegistrationFragment extends Fragment implements TextWatcher, OnClickListener, ResultListener {
 
-	private static final int REGISRATION_REQUEST = 1;
+	private static final int REGISTRATION_REQUEST = 1;
 	
 	private EditText mNickname, mEmail, mPassword;
 	private View mButtonOk;	
@@ -77,10 +77,10 @@ public class RegistrationFragment extends Fragment implements TextWatcher, OnCli
 	
 	@Override
 	public void onApiResult(int requestCode, int resultCode){		
-		if(requestCode == REGISRATION_REQUEST){
+		if(requestCode == REGISTRATION_REQUEST){
 			mProgressDialog.cancel();
 			switch(resultCode){
-				case ApiRequest.SUCCESS:
+				case ApiBaseRequest.SUCCESS:
 					((IApiManager)getActivity()).getApi().request(new LoadPlayersRequest(null), 0);
 					getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
 					getActivity().finish();
@@ -99,7 +99,7 @@ public class RegistrationFragment extends Fragment implements TextWatcher, OnCli
 		final String nick = mNickname.getText().toString();
 		final String email = mEmail.getText().toString();
 		final String password = mPassword.getText().toString();
-		final Registration registration = new Registration(RegistrationFragment.this, nick, email, password);
-		((IApiManager) getActivity()).getApi().request(registration, REGISRATION_REQUEST);
+		final RegistrationRequest registration = new RegistrationRequest(RegistrationFragment.this, nick, email, password);
+		((IApiManager) getActivity()).getApi().request(registration, REGISTRATION_REQUEST);
 	}
 }

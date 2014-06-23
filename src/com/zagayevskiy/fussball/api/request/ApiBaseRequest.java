@@ -7,7 +7,7 @@ import com.zagayevskiy.fussball.api.ApiService;
 import android.os.Handler;
 import android.os.Message;
 
-public abstract class ApiRequest implements Runnable {
+public abstract class ApiBaseRequest implements Runnable {
 
 	public static final int SUCCESS = 1;
 	public static final int FAIL = 2;
@@ -24,7 +24,7 @@ public abstract class ApiRequest implements Runnable {
 		private int mRequestCode = 0;
 		
 		public ApiResultHandler(ResultListener listener) {
-			listenerRef = new WeakReference<Registration.ResultListener>(listener);
+			listenerRef = new WeakReference<ResultListener>(listener);
 		}
 		
 		@Override
@@ -39,7 +39,7 @@ public abstract class ApiRequest implements Runnable {
 	private ApiService mApiService;
 	private final ApiResultHandler mHandler;
 	
-	public ApiRequest(ResultListener listener) {
+	public ApiBaseRequest(ResultListener listener) {
 		mHandler = new ApiResultHandler(listener);
 	}
 	

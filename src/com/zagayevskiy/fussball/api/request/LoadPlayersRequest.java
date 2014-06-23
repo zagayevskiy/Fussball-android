@@ -18,7 +18,7 @@ import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.HttpHelper;
 
-public class LoadPlayersRequest extends ApiRequest {
+public class LoadPlayersRequest extends ApiBaseRequest {
 
 	public LoadPlayersRequest(ResultListener listener){
 		super(listener);
