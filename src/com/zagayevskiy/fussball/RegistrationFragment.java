@@ -1,9 +1,12 @@
 package com.zagayevskiy.fussball;
 
+import com.zagayevskiy.fussball.api.IApiManager;
 import com.zagayevskiy.fussball.api.request.ApiRequest;
+import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
 import com.zagayevskiy.fussball.api.request.Registration;
 import com.zagayevskiy.fussball.api.request.ApiRequest.ResultListener;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,10 +19,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class RegistrationFragment extends Fragment implements TextWatcher, ResultListener {
+public class RegistrationFragment extends Fragment implements TextWatcher, OnClickListener, ResultListener {
 
+	private static final int REGISRATION_REQUEST = 1;
+	
 	private EditText mNickname, mEmail, mPassword;
 	private View mButtonOk;	
+	private ProgressDialog mProgressDialog;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,17 +36,15 @@ public class RegistrationFragment extends Fragment implements TextWatcher, Resul
 		mEmail = (EditText) root.findViewById(R.id.registration_email);
 		mPassword = (EditText) root.findViewById(R.id.registration_password);
 		mButtonOk = root.findViewById(R.id.ok);
-		mButtonOk.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				((AuthActivity) getActivity()).getApi().request(new Registration(RegistrationFragment.this, mNickname.getText().toString(), mEmail.getText().toString(), mPassword.getText().toString()), 0);
-			}
-		});
+		mButtonOk.setOnClickListener(this);
 		
 		mNickname.addTextChangedListener(this);
 		mEmail.addTextChangedListener(this);
 		mPassword.addTextChangedListener(this);
+		
+		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog.setCancelable(false);
+		mProgressDialog.setTitle(R.string.registration_in_progress);
 		
 		checkCanRegister();
 		return root;
@@ -72,16 +76,30 @@ public class RegistrationFragment extends Fragment implements TextWatcher, Resul
 	}
 	
 	@Override
-	public void onApiResult(int requestCode, int resultCode){
-		switch(resultCode){
-			case ApiRequest.SUCCESS:
-				getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
-				getActivity().finish();
-			break;
-			
-			default:
-				Toast.makeText(getActivity(), "can not register: " + resultCode, Toast.LENGTH_LONG).show();
-			break;
+	public void onApiResult(int requestCode, int resultCode){		
+		if(requestCode == REGISRATION_REQUEST){
+			mProgressDialog.cancel();
+			switch(resultCode){
+				case ApiRequest.SUCCESS:
+					((IApiManager)getActivity()).getApi().request(new LoadPlayersRequest(null), 0);
+					getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
+					getActivity().finish();
+				break;
+				
+				default:
+					Toast.makeText(getActivity(), "can not register: " + resultCode, Toast.LENGTH_LONG).show();
+				break;
+			}
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		mProgressDialog.show();
+		final String nick = mNickname.getText().toString();
+		final String email = mEmail.getText().toString();
+		final String password = mPassword.getText().toString();
+		final Registration registration = new Registration(RegistrationFragment.this, nick, email, password);
+		((IApiManager) getActivity()).getApi().request(registration, REGISRATION_REQUEST);
 	}
 }

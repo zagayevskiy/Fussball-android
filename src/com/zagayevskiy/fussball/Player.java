@@ -4,9 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -34,6 +34,7 @@ public class Player {
 	public static final String WHERE_ID_NOT_IN_FMT = FIELD_ID + " NOT IN ( %s )";
 	
 	public static final String WHERE_EMAIL = FIELD_EMAIL + "=?";
+	public static final String WHERE_IS_OWNER = FIELD_IS_OWNER + "=?";
 	
 	public static final String[] FULL_PROJECTION = new String[]{
 		FIELD_ID,
@@ -116,8 +117,12 @@ public class Player {
 		return result;
 	}
 	
-	public static final Player getSingle(Activity activity, String where, String whereArg, String order){
-		final ContentResolver resolver =  activity.getContentResolver();
+	public static final Player getOwner(Context context){
+		return getSingle(context, WHERE_IS_OWNER, String.valueOf(OWNER), null);
+	}
+	
+	public static final Player getSingle(Context context, String where, String whereArg, String order){
+		final ContentResolver resolver =  context.getContentResolver();
 		
 		SELECTION_ONE_ELEMENT[0] = whereArg;
 		final Cursor c = resolver.query(URI, FULL_PROJECTION, where, SELECTION_ONE_ELEMENT, order);

@@ -13,6 +13,7 @@
     <string name="or_register">OR REGISTER</string>
     
     <string name="auth_in_progress">Authentication...</string>
+    <string name="registration_in_progress">Registration...</string>
     
     <string name="tab_players">Players</string>
     <string name="tab_new_game">New game</string>

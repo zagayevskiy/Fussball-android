@@ -84,12 +84,6 @@ public class ApiConnection implements ServiceConnection {
 		}
 	}
 	
-	public void loadPlayers(IHttpEventsListener listener, int requestId){
-		if(mBound){
-			mService.loadPlayers(listener, requestId);
-		}
-	}
-	
 	public void newGame(Player player1, Player player2, int score1, int score2){
 		if(mBound){
 			mService.newGame(player1, player2, score1, score2);

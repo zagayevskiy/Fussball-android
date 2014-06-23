@@ -11,13 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class UsersFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class PlayersFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	
 	private SimpleCursorAdapter mAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		String[] fromColumns = { Player.FIELD_EMAIL, Player.FIELD_RATING };
         int[] toViews = {android.R.id.text1, android.R.id.text2 };
 		

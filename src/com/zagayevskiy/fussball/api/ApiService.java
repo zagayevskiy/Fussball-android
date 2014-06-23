@@ -68,54 +68,6 @@ public class ApiService extends Service {
 		return new HttpCacheServiceBinder(this);
 	}
 	
-	public void loadPlayers(IHttpEventsListener listener, int requestId){
-		Log.d(TAG, "in load players");
-		SharedPreferences prefs = getSharedPreferences(C.prefs.NAME, MODE_PRIVATE);
-		
-		final HttpGet getUsers = new HttpGet(C.api.url.PLAYERS + prefs.getString(C.prefs.key.ACCESS_TOKEN, ""));
-		final IHttpEventsListener l = listener;
-		new AsyncHttpTask(new IHttpEventsListener() {
-			
-			@Override
-			public void onHttpResponse(int requestId, String result) {
-				Log.e(TAG, result);
-				
-				try {
-					
-					ContentValues[] values = Player.jsonToDBContentValues(result);
-					
-					ContentResolver resolver = getContentResolver();
-					resolver.delete(Player.URI, null, null);
-					for(ContentValues v : values){
-						resolver.insert(Player.URI, v);
-					}				
-
-					Log.i(TAG, "loaded");
-					if(l != null){
-						l.onHttpResponse(requestId, "");
-					}
-				} catch (JSONException e) {
-					Log.e(TAG, "Fail to parse json", e);
-					Toast.makeText(ApiService.this, "Fail to parse json", Toast.LENGTH_SHORT).show();
-					if(l != null){
-						l.onHttpRequestFail(requestId, e);
-					}
-				}
-				
-			}
-			
-			@Override
-			public void onHttpRequestFail(int requestId, Exception ex) {
-				Log.e(TAG, "loadUsers failed", ex);
-				l.onHttpRequestFail(requestId, ex);
-			}
-			
-			@Override
-			public void onHttpProgressUpdate(int requestId, Integer... progress) {
-			}
-		}, getUsers, requestId).execute();
-	}
-	
 	public void newGame(Player player1, Player player2, int score1, int score2){
 		final SharedPreferences prefs = getSharedPreferences(C.prefs.NAME, MODE_PRIVATE);
 		final String url = C.api.url.NEW_GAME + prefs.getString(C.prefs.key.ACCESS_TOKEN, "");
