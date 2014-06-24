@@ -11,10 +11,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentResolver;
-import android.content.Context;
-import android.content.SharedPreferences.Editor;
 
 import com.zagayevskiy.fussball.Player;
+import com.zagayevskiy.fussball.api.Token;
 import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.HttpHelper;
 
@@ -45,14 +44,15 @@ public class AuthRequest extends ApiBaseRequest{
 			}
 			
 			final String token = json.getString(C.api.json.key.ACCESS_TOKEN);
-			Editor editor = getApiService().getSharedPreferences(C.prefs.NAME, Context.MODE_PRIVATE).edit();					
-			editor.putString(C.prefs.key.ACCESS_TOKEN, token);					
-			editor.commit();
 			
 			Player player = new Player(json.getJSONObject("player"));
 			player.makeOwner();
+			
 			ContentResolver resolver = getApiService().getContentResolver();
 			resolver.insert(Player.URI, player.getDBContentValues());
+			
+
+			Token.getInstance().saveToken(getApiService(), token);
 			
 			notifyApiResult(SUCCESS);
 			

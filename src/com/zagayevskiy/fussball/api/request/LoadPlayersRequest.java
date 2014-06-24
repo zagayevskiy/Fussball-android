@@ -9,12 +9,12 @@ import org.json.JSONException;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
 import android.util.Log;
 
 import com.zagayevskiy.fussball.Player;
+import com.zagayevskiy.fussball.api.Token;
 import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.HttpHelper;
 
@@ -29,7 +29,7 @@ public class LoadPlayersRequest extends ApiBaseRequest {
 		
 		final HttpGet get = new HttpGet(
 			C.api.url.PLAYERS
-			+ getApiService().getSharedPreferences(C.prefs.NAME, Context.MODE_PRIVATE).getString(C.prefs.key.ACCESS_TOKEN, "")
+			+ Token.getInstance().getToken(getApiService())
 		);
 
 		try {

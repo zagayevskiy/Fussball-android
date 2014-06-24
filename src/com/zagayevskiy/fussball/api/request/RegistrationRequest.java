@@ -12,6 +12,7 @@ import android.content.ContentResolver;
 import android.util.Log;
 
 import com.zagayevskiy.fussball.Player;
+import com.zagayevskiy.fussball.api.Token;
 import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.HttpHelper;
 
@@ -50,10 +51,15 @@ public class RegistrationRequest extends ApiBaseRequest {
 				return;
 			}
 
-			Player player = new Player(json.getJSONObject("player"));
+			final Player player = new Player(json.getJSONObject("player"));
 			player.makeOwner();
+			
+			final String token = json.getString(C.api.json.key.ACCESS_TOKEN);
+			
 			ContentResolver resolver = getApiService().getContentResolver();
 			resolver.insert(Player.URI, player.getDBContentValues());
+			
+			Token.getInstance().saveToken(getApiService(), token);
 			
 			notifyApiResult(SUCCESS);
 

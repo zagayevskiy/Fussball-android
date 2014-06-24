@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import com.zagayevskiy.fussball.Player;
-import com.zagayevskiy.fussball.api.ApiService.HttpCacheServiceBinder;
+import com.zagayevskiy.fussball.api.ApiService.ApiServiceBinder;
 import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
 import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
 
@@ -52,7 +52,7 @@ public class ApiConnection implements ServiceConnection {
 	
 	@Override
 	public void onServiceConnected(ComponentName name, IBinder binder) {
-		mService = ((HttpCacheServiceBinder) binder).getService();
+		mService = ((ApiServiceBinder) binder).getService();
 		mBound = true;
 		for(IBindUnbindListener listener: mBindUnbindListenerList){
 			if(listener != null){

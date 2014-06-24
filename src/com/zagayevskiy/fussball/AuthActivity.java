@@ -22,7 +22,6 @@ public class AuthActivity extends FragmentActivity implements TextWatcher, IBind
 	public static final String TAG = AuthActivity.class.getSimpleName();
 	
 	private static final int AUTH_REQUEST = 1;
-	private static final int LOAD_PLAYERS_REQUEST = 2;
 	
 	private EditText mAuthEmail, mAuthPassword;
 	private View mButtonOk;

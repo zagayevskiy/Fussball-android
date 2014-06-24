@@ -19,7 +19,6 @@ public final class C {
 		public static final String NAME = TAG + "_prefs";
 		
 		public static final class key{
-			public static final String ACCESS_TOKEN = TAG + "_access_token";
 			public static final String OWNER_EMAIL = TAG + "_owner_email";
 			
 		}
