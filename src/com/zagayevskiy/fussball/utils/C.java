@@ -31,7 +31,8 @@ public final class C {
 			public static final String LOGIN = HOST + "login";
 			public static final String REGISTRATION = HOST + "players";
 			public static final String PLAYERS = HOST + "players?token=";
-			public static final String NEW_GAME = HOST + "games?token=";
+			public static final String GAMES = HOST + "games";
+			public static final String NEW_GAME = HOST + "games";
 			
 		}
 		public static final class json{

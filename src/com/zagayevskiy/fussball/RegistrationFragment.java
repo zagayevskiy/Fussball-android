@@ -1,7 +1,9 @@
 package com.zagayevskiy.fussball;
 
+import com.zagayevskiy.fussball.api.ApiConnection;
 import com.zagayevskiy.fussball.api.IApiManager;
 import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
+import com.zagayevskiy.fussball.api.request.LoadGamesRequest;
 import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
 import com.zagayevskiy.fussball.api.request.RegistrationRequest;
 import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
@@ -81,7 +83,9 @@ public class RegistrationFragment extends Fragment implements TextWatcher, OnCli
 			mProgressDialog.cancel();
 			switch(resultCode){
 				case ApiBaseRequest.SUCCESS:
-					((IApiManager)getActivity()).getApi().request(new LoadPlayersRequest(null), 0);
+					ApiConnection api = ((IApiManager)getActivity()).getApi();
+					api.request(new LoadPlayersRequest(null), 0);
+					api.request(new LoadGamesRequest(null), 0);
 					getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
 					getActivity().finish();
 				break;

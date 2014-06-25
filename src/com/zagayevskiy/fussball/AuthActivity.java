@@ -13,6 +13,7 @@ import com.zagayevskiy.fussball.api.ApiConnection;
 import com.zagayevskiy.fussball.api.ApiConnection.IBindUnbindListener;
 import com.zagayevskiy.fussball.api.IApiManager;
 import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
+import com.zagayevskiy.fussball.api.request.LoadGamesRequest;
 import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
 import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
 import com.zagayevskiy.fussball.api.request.AuthRequest;
@@ -125,6 +126,7 @@ public class AuthActivity extends FragmentActivity implements TextWatcher, IBind
 		mProgressDialog.cancel();
 		if(requestCode == AUTH_REQUEST && resultCode == ApiBaseRequest.SUCCESS){
 			mApi.request(new LoadPlayersRequest(null), 0);
+			mApi.request(new LoadGamesRequest(null), 0);
 			startActivity(new Intent(this, MainActivity.class));
 			finish();
 		}

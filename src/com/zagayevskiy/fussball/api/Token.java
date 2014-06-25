@@ -37,5 +37,18 @@ public class Token {
 		return mToken;
 	}
 	
+	public String tokenizeUrl(Context context, String url){
+		final String token = getToken(context);
+		if(token.isEmpty()){
+			return url;
+		}
+		
+		if(url.contains("?")){
+			return url + "&token=" + token;
+		}
+		
+		return url + "?token=" + token;
+	}
+	
 }
 
