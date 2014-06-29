@@ -3,6 +3,7 @@ package com.zagayevskiy.fussball.api.request;
 import java.io.IOException;
 
 import org.apache.http.client.methods.HttpGet;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +27,9 @@ public class LoadGamesRequest extends ApiBaseRequest {
 		
 		try{
 			final String result = HttpHelper.syncHttpRequest(get);
-			Log.i(TAG, result);
+			Log.i(TAG, "Games:" + result);
 			
-			final JSONObject json = new JSONObject(result);
+			final JSONArray array = new JSONArray(result);			
 			
 			notifyApiResult(SUCCESS);
 		}catch (IOException e) {

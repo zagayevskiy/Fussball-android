@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.v4.database.DatabaseUtilsCompat;
 
+import com.zagayevskiy.fussball.Game;
 import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.db.DBAdapter.DatabaseHelper;
 import com.zagayevskiy.fussball.utils.C;
@@ -21,7 +22,8 @@ public class DBProvider extends ContentProvider {
 	private static final String UNKNOWN_URI_LOG = "Unknown URI ";
 
 	// Ids for matcher
-	private static final int USERS = 1, USERS_ID = 2;
+	private static final int PLAYERS = 1, PLAYERS_ID = 2;
+	private static final int GAMES = 3, GAMES_ID = 4;
 
 	/**
 	 * A UriMatcher instance
@@ -31,19 +33,25 @@ public class DBProvider extends ContentProvider {
 		// Create and initialize URI matcher.
 		URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
-		URI_MATCHER.addURI(C.db.AUTHORITY, Player.TABLE_NAME, USERS);
-		URI_MATCHER.addURI(C.db.AUTHORITY, Player.TABLE_NAME + "/#", USERS_ID);
+		URI_MATCHER.addURI(C.db.AUTHORITY, Player.TABLE_NAME, PLAYERS);
+		URI_MATCHER.addURI(C.db.AUTHORITY, Player.TABLE_NAME + "/#", PLAYERS_ID);
+		URI_MATCHER.addURI(C.db.AUTHORITY,  Game.TABLE_NAME, GAMES);
+		URI_MATCHER.addURI(C.db.AUTHORITY, Game.TABLE_NAME + "/#", GAMES_ID);
 	}
 
 	@Override
 	public String getType(Uri uri) {
 		switch (URI_MATCHER.match(uri)) {
-		case USERS:
-			return Player.CONTENT_TYPE;
-		case USERS_ID:
-			return Player.CONTENT_ITEM_TYPE;
-		default:
-			throw new IllegalArgumentException(UNKNOWN_URI_LOG + uri);
+			case PLAYERS:
+				return Player.CONTENT_TYPE;
+			case PLAYERS_ID:
+				return Player.CONTENT_ITEM_TYPE;
+			case GAMES:
+				return Game.CONTENT_TYPE;
+			case GAMES_ID:
+				return Game.CONTENT_ITEM_TYPE;
+			default:
+				throw new IllegalArgumentException(UNKNOWN_URI_LOG + uri);
 		}
 	}
 
@@ -65,17 +73,26 @@ public class DBProvider extends ContentProvider {
 
 		switch (matched) {
 
-		case USERS:
-			count = db.delete(Player.TABLE_NAME, where, whereArgs);
+			case PLAYERS:
+				count = db.delete(Player.TABLE_NAME, where, whereArgs);
 			break;
-
-		case USERS_ID:
-			finalWhere = DatabaseUtilsCompat.concatenateWhere(Player.FIELD_ID + " = " + ContentUris.parseId(uri), where);
-			count = db.delete(Player.TABLE_NAME, finalWhere, whereArgs);
+	
+			case PLAYERS_ID:
+				finalWhere = DatabaseUtilsCompat.concatenateWhere(Player.FIELD_ID + " = " + ContentUris.parseId(uri), where);
+				count = db.delete(Player.TABLE_NAME, finalWhere, whereArgs);
 			break;
-
-		default:
-			throw new IllegalArgumentException(UNKNOWN_URI_LOG + uri);
+	
+			case GAMES:
+				count = db.delete(Game.TABLE_NAME, where, whereArgs);
+			break;
+	
+			case GAMES_ID:
+				finalWhere = DatabaseUtilsCompat.concatenateWhere(Game.FIELD_ID + " = " + ContentUris.parseId(uri), where);
+				count = db.delete(Game.TABLE_NAME, finalWhere, whereArgs);
+			break;
+			
+			default:
+				throw new IllegalArgumentException(UNKNOWN_URI_LOG + uri);
 		}
 
 		getContext().getContentResolver().notifyChange(regUri, null);
@@ -91,14 +108,20 @@ public class DBProvider extends ContentProvider {
 		Uri baseInsertedUri = null;
 		switch (matched) {
 
-		case USERS:
-		case USERS_ID:
-			matchedTable = Player.TABLE_NAME;
-			baseInsertedUri = Player.URI_BASE;
+			case PLAYERS:
+			case PLAYERS_ID:
+				matchedTable = Player.TABLE_NAME;
+				baseInsertedUri = Player.URI_BASE;
 			break;
-
-		default:
+	
+			case GAMES:
+			case GAMES_ID:
+				matchedTable = Game.TABLE_NAME;
+				baseInsertedUri = Game.URI_BASE;
 			break;
+			
+			default:
+				break;
 		}
 
 		if (matchedTable == null) {
@@ -147,19 +170,27 @@ public class DBProvider extends ContentProvider {
 
 		switch (type) {
 
-		case USERS:
-			qb.setTables(Player.TABLE_NAME);
+			case PLAYERS:
+				qb.setTables(Player.TABLE_NAME);
 			break;
-
-		case USERS_ID:
-			qb.setTables(Player.TABLE_NAME);
-			qb.appendWhere(Player.FIELD_ID + "=?");
-			finalSelectionArgs = DatabaseUtilsCompat.appendSelectionArgs(
-					selectionArgs, new String[] { uri.getLastPathSegment() });
+	
+			case PLAYERS_ID:
+				qb.setTables(Player.TABLE_NAME);
+				qb.appendWhere(Player.FIELD_ID + "=?");
+				finalSelectionArgs = DatabaseUtilsCompat.appendSelectionArgs(selectionArgs, new String[] { uri.getLastPathSegment() });
 			break;
-
-		default:
-			throw new IllegalArgumentException(UNKNOWN_URI_LOG + uri);
+	
+			case GAMES:
+				qb.setTables(Game.TABLE_NAME);
+			break;
+	
+			case GAMES_ID:
+				qb.setTables(Game.TABLE_NAME);
+				qb.appendWhere(Game.FIELD_ID + "=?");
+				finalSelectionArgs = DatabaseUtilsCompat.appendSelectionArgs(selectionArgs, new String[] { uri.getLastPathSegment() });
+			
+			default:
+				throw new IllegalArgumentException(UNKNOWN_URI_LOG + uri);
 		}
 
 		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
@@ -180,18 +211,26 @@ public class DBProvider extends ContentProvider {
 		int matched = URI_MATCHER.match(uri);
 
 		switch (matched) {
-		case USERS:
-			count = db.update(Player.TABLE_NAME, values, where, whereArgs);
+			case PLAYERS:
+				count = db.update(Player.TABLE_NAME, values, where, whereArgs);
+			break;
+	
+			case PLAYERS_ID:
+				finalWhere = DatabaseUtilsCompat.concatenateWhere(Player.FIELD_ID + " = " + ContentUris.parseId(uri), where);
+				count = db.update(Player.TABLE_NAME, values, finalWhere, whereArgs);
+			break;
+			
+			case GAMES:
+				count = db.update(Game.TABLE_NAME, values, where, whereArgs);
+			break;
+	
+			case GAMES_ID:
+				finalWhere = DatabaseUtilsCompat.concatenateWhere(Game.FIELD_ID + " = " + ContentUris.parseId(uri), where);
+				count = db.update(Game.TABLE_NAME, values, finalWhere, whereArgs);
 			break;
 
-		case USERS_ID:
-			finalWhere = DatabaseUtilsCompat.concatenateWhere(Player.FIELD_ID
-					+ " = " + ContentUris.parseId(uri), where);
-			count = db.update(Player.TABLE_NAME, values, finalWhere, whereArgs);
-			break;
-
-		default:
-			throw new IllegalArgumentException(UNKNOWN_URI_LOG + uri);
+			default:
+				throw new IllegalArgumentException(UNKNOWN_URI_LOG + uri);
 		}
 
 		getContext().getContentResolver().notifyChange(uri, null);

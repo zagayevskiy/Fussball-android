@@ -34,6 +34,7 @@ public class LoadPlayersRequest extends ApiBaseRequest {
 
 		try {
 			final String result = HttpHelper.syncHttpRequest(get);
+			Log.i("players", result);
 			ContentValues[] values = Player.jsonToDBContentValues(result);
 			
 			final Player owner = Player.getOwner(getApiService());

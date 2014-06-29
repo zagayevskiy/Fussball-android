@@ -5,17 +5,16 @@ import java.util.List;
 
 import org.apache.http.client.methods.HttpUriRequest;
 
-import com.zagayevskiy.fussball.Player;
-import com.zagayevskiy.fussball.api.ApiService.ApiServiceBinder;
-import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
-import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.zagayevskiy.fussball.api.ApiService.ApiServiceBinder;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
+import com.zagayevskiy.fussball.utils.HttpHelper.IHttpEventsListener;
 
 public class ApiConnection implements ServiceConnection {
 
@@ -81,12 +80,6 @@ public class ApiConnection implements ServiceConnection {
 		if(mBound){
 			mBound = false;
 			mContext.unbindService(this);
-		}
-	}
-	
-	public void newGame(Player player1, Player player2, int score1, int score2){
-		if(mBound){
-			mService.newGame(player1, player2, score1, score2);
 		}
 	}
 	

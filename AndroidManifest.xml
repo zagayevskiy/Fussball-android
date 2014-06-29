@@ -30,6 +30,10 @@
             android:exported="false" >
         </activity>
         <activity
+            android:name="com.zagayevskiy.fussball.NewGameActivity"
+            android:exported="false" >
+        </activity>
+        <activity
             android:name="com.zagayevskiy.fussball.SearchPlayerActivity"
             android:exported="false" >
         </activity>

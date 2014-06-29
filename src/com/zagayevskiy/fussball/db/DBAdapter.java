@@ -5,6 +5,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.zagayevskiy.fussball.Game;
 import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.utils.C;
 
@@ -22,7 +23,7 @@ public class DBAdapter {
 		
 		private static final int DATABASE_VERSION = 1;
 		
-		private static final String TABLE_USERS_CREATE = "CREATE TABLE IF NOT EXISTS "
+		private static final String TABLE_PLAYERS_CREATE = "CREATE TABLE IF NOT EXISTS "
 			+ Player.TABLE_NAME
 			+ " ("
 				+ Player.FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -31,6 +32,16 @@ public class DBAdapter {
 				+ Player.FIELD_IS_OWNER + " INTEGER"
 			+ ");";
 		
+		private static final String TABLE_GAMES_CREATE = "CREATE TABLE IF NOT EXISTS "
+			+ Game.TABLE_NAME
+			+ " ("
+				+ Game.FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+				+ Game.FIELD_PLAYER1_EMAIL + " TEXT NOT NULL,"
+				+ Game.FIELD_PLAYER2_EMAIL + " TEXT NOT NULL,"
+				+ Game.FIELD_SCORE1 + " INTEGER NOT NULL,"
+				+ Game.FIELD_SCORE2 + " INTEGER NOT NULL,"
+				+ Game.FIELD_TIMESTAMP + " INTEGER"
+			+ ");";
 		
 		DatabaseHelper(Context context) {
 			super(context, C.db.AUTHORITY, null, DATABASE_VERSION);
@@ -38,7 +49,8 @@ public class DBAdapter {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(TABLE_USERS_CREATE);
+			db.execSQL(TABLE_PLAYERS_CREATE);
+			db.execSQL(TABLE_GAMES_CREATE);
 		}
 
 		@Override

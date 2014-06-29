@@ -1,5 +1,8 @@
 package com.zagayevskiy.fussball;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.ContentResolver;
 import android.net.Uri;
 
@@ -28,13 +31,38 @@ public class Game {
 		FIELD_PLAYER1_EMAIL,
 		FIELD_PLAYER2_EMAIL,
 		FIELD_SCORE1,
-		FIELD_SCORE2,
-		"p1." + Player.FIELD_EMAIL, 
-		"p2." + Player.FIELD_EMAIL 
+		FIELD_SCORE2
 	};
 	
 	private long id;
-	private String player1Email;
-	private String player2Email;
+	private String mPlayer1Nick;
+	private String mPlayer2Nick;
+	private int mScore1;
+	private int mScore2;
+	
+	public Game(String nick1, String nick2, int score1, int score2){
+		mPlayer1Nick = nick1;
+		mPlayer2Nick = nick2;
+		mScore1 = score1;
+		mScore2 = score2;
+	}
+	
+	public JSONObject toJson() throws JSONException{
+		JSONObject json = new JSONObject();
+		JSONObject side = new JSONObject();
+		JSONObject player = new JSONObject();
+		
+		player.put("nick", mPlayer1Nick);
+		side.put("player", player);
+		side.put("score", mScore1);
+		json.put("side1", side);
+		
+		player.put("nick", mPlayer2Nick);
+		side.put("player", player);
+		side.put("score", mScore2);
+		json.put("side2", side);
+		
+		return json;
+	}
 	
 }

@@ -11,6 +11,7 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import com.zagayevskiy.fussball.api.ApiConnection;
 import com.zagayevskiy.fussball.api.ApiConnection.IBindUnbindListener;
 import com.zagayevskiy.fussball.api.IApiManager;
+import com.zagayevskiy.fussball.api.request.LoadGamesRequest;
 import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
 import com.zagayevskiy.fussball.tabs.TabsPagerAdapter;
 
@@ -32,7 +33,7 @@ public class MainActivity extends FragmentActivity implements IBindUnbindListene
 		
 		tabsPagerAdapter
     		.addTab(actionBar.newTab().setText(R.string.tab_players), PlayersFragment.class)
-    		.addTab(actionBar.newTab().setText(R.string.tab_new_game), NewGameFragment.class)
+    		.addTab(actionBar.newTab().setText(R.string.tab_games), GamesFragment.class)
 			;
 	}
 
@@ -71,8 +72,8 @@ public class MainActivity extends FragmentActivity implements IBindUnbindListene
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				//mApi.loadPlayers(null, 0);
 				mApi.request(new LoadPlayersRequest(null), 0);
+				mApi.request(new LoadGamesRequest(null), 0);
 				return true;
 			}
 		});
