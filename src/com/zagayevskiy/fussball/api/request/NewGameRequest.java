@@ -11,6 +11,7 @@ import android.util.Log;
 import com.zagayevskiy.fussball.Game;
 import com.zagayevskiy.fussball.api.Token;
 import com.zagayevskiy.fussball.utils.C;
+import com.zagayevskiy.fussball.utils.HttpHelper;
 
 public class NewGameRequest extends ApiBaseRequest {
 
@@ -26,17 +27,20 @@ public class NewGameRequest extends ApiBaseRequest {
 	
 	@Override
 	public void run() {
-		final HttpPost post = new HttpPost(Token.getInstance().tokenizeUrl(getApiService(), C.api.url.NEW_GAME));
+		String url;
+		final HttpPost post = new HttpPost(url = Token.getInstance().tokenizeUrl(getApiService(), C.api.url.NEW_GAME));
+		Log.e(TAG, url);
 		try {
 			
 			final StringEntity entity = new StringEntity(mGame.toJson().toString(), "UTF-8");
-			Log.e(TAG, mGame.toJson().toString(4));
+			Log.e(TAG, mGame.toJson().toString());
 			entity.setContentType("application/json");
 			post.setEntity(entity);
 			//TODO: post it
-//			final String result = HttpHelper.syncHttpRequest(post);
+			final String result = HttpHelper.syncHttpRequest(post);
+			Log.e(TAG, "after");
 			
-//			Log.i(TAG, "Game result: " + result);
+			Log.i(TAG, "Game result: " + result);
 					
 			notifyApiResult(SUCCESS);
 		} catch (IOException e) {

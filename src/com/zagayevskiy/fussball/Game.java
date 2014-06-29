@@ -49,14 +49,20 @@ public class Game {
 	
 	public JSONObject toJson() throws JSONException{
 		JSONObject json = new JSONObject();
-		JSONObject side = new JSONObject();
-		JSONObject player = new JSONObject();
+		JSONObject side;
+		JSONObject player;
 		
+		//Side #1
+		side = new JSONObject();
+		player = new JSONObject();
 		player.put("nick", mPlayer1Nick);
 		side.put("player", player);
 		side.put("score", mScore1);
 		json.put("side1", side);
 		
+		//Side #2
+		side = new JSONObject();
+		player = new JSONObject();
 		player.put("nick", mPlayer2Nick);
 		side.put("player", player);
 		side.put("score", mScore2);

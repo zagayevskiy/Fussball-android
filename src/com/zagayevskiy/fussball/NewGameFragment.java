@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +85,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener {
 				final String playerId = String.valueOf(data.getLongExtra(SearchPlayerActivity.RESULT_KEY_PLAYER_ID, Player.INVALID_ID));
 
 				final Player player = Player.getSingle(getActivity(), Player.WHERE_ID, playerId, null);
+				Log.i(TAG, playerId);
 				
 				switch(requestCode){
 					case REQUEST_SELECT_PLAYER1:

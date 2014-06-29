@@ -10,6 +10,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -73,14 +76,23 @@ public class HttpHelper {
 			}
 		}
 	}
+	
+	private static final HttpParams CONNECTION_PARAMS = new BasicHttpParams();
+	private static final int TIMEOUT = 10000;
+	
+	static{
+		HttpConnectionParams.setConnectionTimeout(CONNECTION_PARAMS, TIMEOUT);
+		HttpConnectionParams.setSoTimeout(CONNECTION_PARAMS, TIMEOUT);
+	}
 
 	public static final String syncHttpRequest(HttpUriRequest request)
 			throws ClientProtocolException, IOException {
 		StringBuffer resultBuffer = new StringBuffer("");
 		BufferedReader bufferedReader = null;
 		try {
-			HttpClient httpClient = new DefaultHttpClient();
-
+			
+			HttpClient httpClient = new DefaultHttpClient(CONNECTION_PARAMS);
+			
 			HttpResponse httpResponse = httpClient.execute(request);
 			InputStream inputStream = httpResponse.getEntity().getContent();
 			bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -89,7 +101,7 @@ public class HttpHelper {
 			while (readLine != null) {
 				resultBuffer.append(readLine);
 				resultBuffer.append("\n");
-				readLine = bufferedReader.readLine();
+				readLine = bufferedReader.readLine();				
 			}
 		} finally {
 			if (bufferedReader != null) {
