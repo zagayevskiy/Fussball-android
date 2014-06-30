@@ -1,8 +1,5 @@
 package com.zagayevskiy.fussball;
 
-import com.zagayevskiy.fussball.api.IApiManager;
-import com.zagayevskiy.fussball.api.request.LoadGamesRequest;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,7 +8,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +24,7 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		String[] fromColumns = { Game.FIELD_PLAYER1_EMAIL, Game.FIELD_PLAYER2_EMAIL };
+		String[] fromColumns = { Game.FIELD_PLAYER1_NICK, Game.FIELD_PLAYER2_NICK };
         int[] toViews = {android.R.id.text1, android.R.id.text2 };
         
         setHasOptionsMenu(true);

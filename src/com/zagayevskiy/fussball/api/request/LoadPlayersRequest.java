@@ -45,7 +45,7 @@ public class LoadPlayersRequest extends ApiBaseRequest {
 			operations.add(ContentProviderOperation.newDelete(Player.URI).build());
 			
 			for(ContentValues v : values){
-				if(v.getAsString(Player.FIELD_EMAIL).equals(owner.getEmail())){
+				if(v.getAsString(Player.FIELD_NICK).equals(owner.getNick())){
 					v.put(Player.FIELD_IS_OWNER, Player.OWNER);
 				}
 				operations.add(ContentProviderOperation.newInsert(Player.URI).withValues(v).build());

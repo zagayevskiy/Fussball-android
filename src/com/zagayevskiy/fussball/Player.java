@@ -79,7 +79,7 @@ public class Player {
 		return mId;
 	}
 	
-	public String getEmail(){
+	private String getEmail(){
 		return mEmail;
 	}
 	

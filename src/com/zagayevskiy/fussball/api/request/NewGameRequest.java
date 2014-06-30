@@ -27,18 +27,15 @@ public class NewGameRequest extends ApiBaseRequest {
 	
 	@Override
 	public void run() {
-		String url;
-		final HttpPost post = new HttpPost(url = Token.getInstance().tokenizeUrl(getApiService(), C.api.url.NEW_GAME));
-		Log.e(TAG, url);
+		final HttpPost post = new HttpPost(Token.getInstance().tokenizeUrl(getApiService(), C.api.url.NEW_GAME));
 		try {
 			
 			final StringEntity entity = new StringEntity(mGame.toJson().toString(), "UTF-8");
 			Log.e(TAG, mGame.toJson().toString());
 			entity.setContentType("application/json");
 			post.setEntity(entity);
-			//TODO: post it
+			
 			final String result = HttpHelper.syncHttpRequest(post);
-			Log.e(TAG, "after");
 			
 			Log.i(TAG, "Game result: " + result);
 					

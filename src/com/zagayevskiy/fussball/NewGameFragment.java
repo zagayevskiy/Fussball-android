@@ -1,9 +1,12 @@
 package com.zagayevskiy.fussball;
 
 import com.zagayevskiy.fussball.api.IApiManager;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
 import com.zagayevskiy.fussball.api.request.NewGameRequest;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,33 +17,40 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class NewGameFragment extends Fragment implements View.OnClickListener {
+public class NewGameFragment extends Fragment implements View.OnClickListener, ResultListener {
 
 	public static final String TAG = NewGameFragment.class.getName();
 	
 	private static final int REQUEST_SELECT_PLAYER1 = 1;
 	private static final int REQUEST_SELECT_PLAYER2 = 2;
 	
-	private Button selectPlayer1, selectPlayer2, buttonOk;
-	private EditText score1, score2;
+	private Button mSelectPlayer1, mSelectPlayer2, mButtonOk;
+	private EditText mScore1, mScore2;
+	private ProgressDialog mProgressDialog;
 	
-	private Player player1, player2;
+	private Player mPlayer1, mPlayer2;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		View v = inflater.inflate(R.layout.new_game_fragment, container, false);
 		
-		selectPlayer1 = (Button) v.findViewById(R.id.select_player1);
-		selectPlayer2 = (Button) v.findViewById(R.id.select_player2);
-		buttonOk = (Button) v.findViewById(R.id.ok);
+		mSelectPlayer1 = (Button) v.findViewById(R.id.select_player1);
+		mSelectPlayer2 = (Button) v.findViewById(R.id.select_player2);
+		mButtonOk = (Button) v.findViewById(R.id.ok);
 		
-		score1 = (EditText) v.findViewById(R.id.player1_score);
-		score2 = (EditText) v.findViewById(R.id.player2_score);
+		mScore1 = (EditText) v.findViewById(R.id.player1_score);
+		mScore2 = (EditText) v.findViewById(R.id.player2_score);
 		
-		selectPlayer1.setOnClickListener(this);
-		selectPlayer2.setOnClickListener(this);
-		buttonOk.setOnClickListener(this);
+		mSelectPlayer1.setOnClickListener(this);
+		mSelectPlayer2.setOnClickListener(this);
+		mButtonOk.setOnClickListener(this);
+		
+		setPlayer1(Player.getOwner(getActivity()));
+		
+		mProgressDialog = new ProgressDialog(getActivity());
+		mProgressDialog.setCancelable(false);
+		mProgressDialog.setTitle(R.string.new_game_in_progress);
 		
 		return v;
 	}
@@ -56,25 +66,27 @@ public class NewGameFragment extends Fragment implements View.OnClickListener {
 			switch(id){
 				case R.id.select_player1:
 					requestCode = REQUEST_SELECT_PLAYER1;
-					if(player2 != null){
-						intent.putExtra(SearchPlayerActivity.KEY_EXCLUDE_PLAYER_IDS, new String[]{ String.valueOf(player2.getId()) });
+					if(mPlayer2 != null){
+						intent.putExtra(SearchPlayerActivity.KEY_EXCLUDE_PLAYER_IDS, new String[]{ String.valueOf(mPlayer2.getId()) });
 					}
 				break;
 				
 				case R.id.select_player2:
 					requestCode = REQUEST_SELECT_PLAYER2;
-					if(player1 != null){
-						intent.putExtra(SearchPlayerActivity.KEY_EXCLUDE_PLAYER_IDS, new String[]{ String.valueOf(player1.getId()) });
+					if(mPlayer1 != null){
+						intent.putExtra(SearchPlayerActivity.KEY_EXCLUDE_PLAYER_IDS, new String[]{ String.valueOf(mPlayer1.getId()) });
 					}
 				break;
 			}
 			startActivityForResult(intent, requestCode);
 		}else if(id == R.id.ok){
-			final int s1 = Integer.parseInt(score1.getText().toString());
-			final int s2 = Integer.parseInt(score2.getText().toString());
+			final int s1 = Integer.parseInt(mScore1.getText().toString());
+			final int s2 = Integer.parseInt(mScore2.getText().toString());
 			
-			Game game = new Game(player1.getEmail(), player2.getEmail(), s1, s2);
-			((IApiManager) getActivity()).getApi().request(new NewGameRequest(null, game), 0);
+			mProgressDialog.show();
+			
+			Game game = new Game(mPlayer1.getNick(), mPlayer2.getNick(), s1, s2);
+			((IApiManager) getActivity()).getApi().request(new NewGameRequest(this, game), 0);
 		}
 	}
 	
@@ -107,12 +119,20 @@ public class NewGameFragment extends Fragment implements View.OnClickListener {
 	}
 	
 	private void setPlayer1(Player player){
-		player1 = player;
-		selectPlayer1.setText(player.getEmail());
+		mPlayer1 = player;
+		mSelectPlayer1.setText(player.getNick());
 	}
 	
 	private void setPlayer2(Player player){
-		player2 = player;
-		selectPlayer2.setText(player.getEmail());
+		mPlayer2 = player;
+		mSelectPlayer2.setText(player.getNick());
+	}
+
+	@Override
+	public void onApiResult(int requestCode, int resultCode) {
+		mProgressDialog.cancel();
+		if(resultCode == ApiBaseRequest.SUCCESS){
+			getActivity().finish();
+		}
 	}
 }

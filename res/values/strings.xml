@@ -14,6 +14,7 @@
     
     <string name="auth_in_progress">Authentication...</string>
     <string name="registration_in_progress">Registration...</string>
+    <string name="new_game_in_progress">Creating new game...</string>
     
     <string name="tab_players">Players</string>
     <string name="tab_games">Games</string>
