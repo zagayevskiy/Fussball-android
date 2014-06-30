@@ -17,7 +17,7 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		String[] fromColumns = { Player.FIELD_EMAIL, Player.FIELD_RATING };
+		String[] fromColumns = { Player.FIELD_NICK, Player.FIELD_RATING };
         int[] toViews = {android.R.id.text1, android.R.id.text2 };
 		
         mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null, fromColumns, toViews, 0);

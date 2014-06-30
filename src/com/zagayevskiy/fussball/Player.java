@@ -17,6 +17,7 @@ public class Player {
 	
 	public static final String FIELD_ID = "_id";
 	public static final String FIELD_EMAIL = "email";	
+	public static final String FIELD_NICK = "nick";	
 	public static final String FIELD_RATING = "rating";
 	public static final String FIELD_IS_OWNER = "isowner";
 	
@@ -39,25 +40,29 @@ public class Player {
 	public static final String[] FULL_PROJECTION = new String[]{
 		FIELD_ID,
 		FIELD_EMAIL,
+		FIELD_NICK,
 		FIELD_RATING,
 		FIELD_IS_OWNER
 	};
 	
 	public static final String[] SEARCH_PROJECTION = new String[]{
 		FIELD_ID,
-		FIELD_EMAIL
+		FIELD_EMAIL, 
+		FIELD_NICK
 	};
 	
 	private static final String[] SELECTION_ONE_ELEMENT = new String[]{ String.valueOf(INVALID_ID) };
 	
 	private long mId;
 	private String mEmail;
+	private String mNick;
 	private double mRating;
 	private boolean mIsOwner; 
 	
 	public Player(JSONObject json) throws JSONException{
 		mId = INVALID_ID;
 		mEmail = json.getString(FIELD_EMAIL);
+		mNick = json.getString("nickName");
 		mRating = json.getDouble(FIELD_RATING);
 		mIsOwner = false;
 	}
@@ -65,6 +70,7 @@ public class Player {
 	public Player(Cursor c){
 		mId = c.getLong(c.getColumnIndex(FIELD_ID));
 		mEmail = c.getString(c.getColumnIndex(FIELD_EMAIL));
+		mNick = c.getString(c.getColumnIndex(FIELD_NICK));
 		mRating = c.getDouble(c.getColumnIndex(FIELD_RATING));
 		mIsOwner = c.getInt(c.getColumnIndex(FIELD_IS_OWNER)) == OWNER;
 	}
@@ -75,6 +81,10 @@ public class Player {
 	
 	public String getEmail(){
 		return mEmail;
+	}
+	
+	public String getNick(){
+		return mNick;
 	}
 	
 	public void makeOwner(){
@@ -92,6 +102,7 @@ public class Player {
 		}
 		
 		result.put(FIELD_EMAIL, mEmail);
+		result.put(FIELD_NICK, mNick);
 		result.put(FIELD_RATING, mRating);
 		result.put(FIELD_IS_OWNER, mIsOwner ? OWNER : NOT_OWNER);
 		
@@ -109,6 +120,7 @@ public class Player {
 			final String email = item.getString(FIELD_EMAIL);
 			ContentValues values = new ContentValues();
 			values.put(FIELD_EMAIL, email);
+			values.put(FIELD_NICK, item.getString("nickName"));
 			values.put(FIELD_RATING, item.getDouble(FIELD_RATING));
 			values.put(FIELD_IS_OWNER, NOT_OWNER);
 			result[i] = values;
