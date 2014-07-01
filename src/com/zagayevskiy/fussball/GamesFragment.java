@@ -20,16 +20,27 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	
 	private static final String TAG = GamesFragment.class.getName();
 	
+	private final static String[] FROM_COLUMNS = {
+		Game.FIELD_PLAYER1_NICK, Game.FIELD_PLAYER2_NICK,		
+		Game.FIELD_SCORE1, Game.FIELD_SCORE2,
+		Game.FIELD_PLAYER1_RATING_DELTA, Game.FIELD_PLAYER2_RATING_DELTA
+	};
+    
+	private final static int[] TO_VIEWS = {
+		R.id.player1_nick, R.id.player2_nick,
+		R.id.player1_score, R.id.player2_score,
+		R.id.player1_rating_delta, R.id.player2_rating_delta 
+	};
+	
 	private SimpleCursorAdapter mAdapter;
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		String[] fromColumns = { Game.FIELD_PLAYER1_NICK, Game.FIELD_PLAYER2_NICK };
-        int[] toViews = {android.R.id.text1, android.R.id.text2 };
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
         
         setHasOptionsMenu(true);
 		
-        mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null, fromColumns, toViews, 0);
+        mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.games_list_item, null, FROM_COLUMNS, TO_VIEWS, 0);    
+        mAdapter.setViewBinder(new GamesListViewBinder(getActivity()));
         setListAdapter(mAdapter);
         getLoaderManager().initLoader(0, null, this);
         
@@ -69,5 +80,4 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mAdapter.swapCursor(null);
 	}
-	
 }

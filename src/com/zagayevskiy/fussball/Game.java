@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
+import android.util.Log;
 
 import com.zagayevskiy.fussball.utils.C;
 
@@ -21,6 +22,8 @@ public class Game {
 	public static final String FIELD_PLAYER2_NICK = "player2nick";
 	public static final String FIELD_SCORE1 = "score1";
 	public static final String FIELD_SCORE2 = "score2";
+	public static final String FIELD_PLAYER1_RATING_DELTA = "player1delta";
+	public static final String FIELD_PLAYER2_RATING_DELTA = "player2delta";
 	public static final String FIELD_TIMESTAMP = "timestamp";
 	
 	public static final String CONTENT_TYPE = C.db.BASE_CONTENT_TYPE + ".game";
@@ -36,7 +39,9 @@ public class Game {
 		FIELD_PLAYER1_NICK,
 		FIELD_PLAYER2_NICK,
 		FIELD_SCORE1,
-		FIELD_SCORE2
+		FIELD_SCORE2,
+		FIELD_PLAYER1_RATING_DELTA,
+		FIELD_PLAYER2_RATING_DELTA
 	};
 	
 	private long id;
@@ -66,6 +71,8 @@ public class Game {
 			
 			values.put(FIELD_PLAYER1_NICK, player1.getString("nick"));
 			values.put(FIELD_PLAYER2_NICK, player2.getString("nick"));
+			values.put(FIELD_PLAYER1_RATING_DELTA, player1.getInt("ratingDelta"));
+			values.put(FIELD_PLAYER2_RATING_DELTA, player2.getInt("ratingDelta"));
 			values.put(FIELD_SCORE1, side1.getInt("score"));
 			values.put(FIELD_SCORE2, side2.getInt("score"));
 			

@@ -41,6 +41,8 @@ public class DBAdapter {
 				+ Game.FIELD_PLAYER2_NICK + " TEXT NOT NULL,"
 				+ Game.FIELD_SCORE1 + " INTEGER NOT NULL,"
 				+ Game.FIELD_SCORE2 + " INTEGER NOT NULL,"
+				+ Game.FIELD_PLAYER1_RATING_DELTA + " INTEGER,"
+				+ Game.FIELD_PLAYER2_RATING_DELTA + " INTEGER,"
 				+ Game.FIELD_TIMESTAMP + " INTEGER"
 			+ ");";
 		
