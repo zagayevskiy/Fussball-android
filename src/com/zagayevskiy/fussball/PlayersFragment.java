@@ -20,7 +20,7 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 		String[] fromColumns = { Player.FIELD_NICK, Player.FIELD_RATING };
         int[] toViews = {android.R.id.text1, android.R.id.text2 };
 		
-        mAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_2, null, fromColumns, toViews, 0);
+        mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.players_list_item, null, fromColumns, toViews, 0);
         setListAdapter(mAdapter);
         getLoaderManager().initLoader(0, null, this); 
 		return super.onCreateView(inflater, container, savedInstanceState);
