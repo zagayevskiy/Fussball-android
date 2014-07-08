@@ -3,41 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <EditText
+
+    <AutoCompleteTextView
         android:id="@+id/registration_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:completionThreshold="1"
         android:hint="@string/hint_email"
         android:inputType="textEmailAddress"
-        android:singleLine="true"
-        android:layout_margin="8dp" />
-    
+        android:singleLine="true" />
+
     <EditText
         android:id="@+id/registration_nick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:hint="@string/hint_nick"
         android:inputType="textEmailAddress"
-        android:singleLine="true"
-        android:layout_margin="8dp" />
+        android:singleLine="true" />
 
     <EditText
         android:id="@+id/registration_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:hint="@string/hint_password"
         android:inputType="textPassword"
-        android:singleLine="true"
-        android:layout_margin="8dp" />
+        android:singleLine="true" />
 
     <Button
         android:id="@+id/ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/ok" 
-        android:padding="10dp"/>
-    
-    
+        android:padding="10dp"
+        android:text="@string/ok" />
+
 </LinearLayout>
