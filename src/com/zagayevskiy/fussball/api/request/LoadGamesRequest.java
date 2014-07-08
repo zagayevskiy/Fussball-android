@@ -33,9 +33,17 @@ public class LoadGamesRequest extends ApiBaseRequest {
 			final String result = HttpHelper.syncHttpRequest(get);
 			Log.i(TAG, "Games:" + result);
 			
-			final JSONArray array = new JSONArray(result);			
+			final JSONObject json = new JSONObject(result);
 			
-			List<ContentValues> valuesList = Game.fromJson(array);
+			final JSONArray errors = json.getJSONArray(C.api.json.key.ERRORS);
+			if(errors.length() > 0){
+				notifyApiResult(FAIL);
+				return;
+			}
+			
+			final JSONArray gamesArray = json.getJSONArray("games");			
+			
+			List<ContentValues> valuesList = Game.fromJson(gamesArray);
 			
 			ContentResolver resolver = getApiService().getContentResolver();
 			resolver.delete(Game.URI, null, null);

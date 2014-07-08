@@ -25,7 +25,7 @@ public class RegistrationFragment extends Fragment implements TextWatcher, OnCli
 
 	private static final int REGISTRATION_REQUEST = 1;
 	
-	private EditText mNickname, mEmail, mPassword;
+	private EditText mNick, mEmail, mPassword;
 	private View mButtonOk;	
 	private ProgressDialog mProgressDialog;
 	
@@ -34,13 +34,13 @@ public class RegistrationFragment extends Fragment implements TextWatcher, OnCli
 		
 		View root = inflater.inflate(R.layout.registration, container, false);
 		
-		mNickname = (EditText) root.findViewById(R.id.registration_nickname);
+		mNick = (EditText) root.findViewById(R.id.registration_nick);
 		mEmail = (EditText) root.findViewById(R.id.registration_email);
 		mPassword = (EditText) root.findViewById(R.id.registration_password);
 		mButtonOk = root.findViewById(R.id.ok);
 		mButtonOk.setOnClickListener(this);
 		
-		mNickname.addTextChangedListener(this);
+		mNick.addTextChangedListener(this);
 		mEmail.addTextChangedListener(this);
 		mPassword.addTextChangedListener(this);
 		
@@ -71,7 +71,7 @@ public class RegistrationFragment extends Fragment implements TextWatcher, OnCli
 		boolean canRegister = true;
 		
 		canRegister &= mEmail.getText().length() != 0;
-		canRegister &= mNickname.getText().length() != 0;
+		canRegister &= mNick.getText().length() != 0;
 		canRegister &= mPassword.getText().length() != 0;
 		
 		mButtonOk.setEnabled(canRegister);
@@ -100,7 +100,7 @@ public class RegistrationFragment extends Fragment implements TextWatcher, OnCli
 	@Override
 	public void onClick(View v) {
 		mProgressDialog.show();
-		final String nick = mNickname.getText().toString();
+		final String nick = mNick.getText().toString();
 		final String email = mEmail.getText().toString();
 		final String password = mPassword.getText().toString();
 		final RegistrationRequest registration = new RegistrationRequest(RegistrationFragment.this, nick, email, password);

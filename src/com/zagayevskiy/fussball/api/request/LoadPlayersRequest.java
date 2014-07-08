@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.http.client.methods.HttpGet;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -35,7 +37,16 @@ public class LoadPlayersRequest extends ApiBaseRequest {
 		try {
 			final String result = HttpHelper.syncHttpRequest(get);
 			Log.i("players", result);
-			ContentValues[] values = Player.jsonToDBContentValues(result);
+			
+			final JSONObject json = new JSONObject(result);
+			
+			final JSONArray errors = json.getJSONArray(C.api.json.key.ERRORS);
+			if(errors.length() > 0){
+				notifyApiResult(FAIL);
+				return;
+			}
+			
+			ContentValues[] values = Player.jsonToDBContentValues(json.getJSONArray("players"));
 			
 			final Player owner = Player.getOwner(getApiService());
 			
@@ -54,10 +65,13 @@ public class LoadPlayersRequest extends ApiBaseRequest {
 		
 		} catch (IOException e) {
 			notifyApiResult(FAIL_NETWORK);
+			Log.e("Fail", "Ex", e);
 		} catch (JSONException e) {
 			notifyApiResult(FAIL);
+			Log.e("Fail", "Ex", e);
 		} catch (RemoteException e) {
 			notifyApiResult(FAIL_NETWORK);
+			Log.e("Fail", "Ex", e);
 		} catch (OperationApplicationException e) {
 			Log.e("Fail", "Ex", e);
 			notifyApiResult(FAIL);

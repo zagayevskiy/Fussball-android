@@ -20,7 +20,7 @@ public class SearchPlayerActivity extends ListActivity implements LoaderManager.
 	
 	public static final String RESULT_KEY_PLAYER_ID = TAG + "_user_id";
 	
-	private static final String[] from = new String[]{ Player.FIELD_EMAIL };
+	private static final String[] from = new String[]{ Player.FIELD_NICK };
 	private static final int[] to = new int[] { android.R.id.text1 };
 	
 	private SimpleCursorAdapter mAdapter;

@@ -14,10 +14,10 @@
         android:layout_margin="8dp" />
     
     <EditText
-        android:id="@+id/registration_nickname"
+        android:id="@+id/registration_nick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_nickname"
+        android:hint="@string/hint_nick"
         android:inputType="textEmailAddress"
         android:singleLine="true"
         android:layout_margin="8dp" />

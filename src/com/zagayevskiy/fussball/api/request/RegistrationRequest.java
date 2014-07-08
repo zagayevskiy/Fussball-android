@@ -20,11 +20,11 @@ public class RegistrationRequest extends ApiBaseRequest {
 	
 	private static final String TAG = RegistrationRequest.class.getName();
 	
-	private final String mNickname, mEmail, mPassword;
+	private final String mNick, mEmail, mPassword;
 	
-	public RegistrationRequest(ResultListener listener, String nickname, String email, String password){
+	public RegistrationRequest(ResultListener listener, String nick, String email, String password){
 		super(listener);
-		mNickname = nickname;
+		mNick = nick;
 		mEmail = email;
 		mPassword = password;
 	}
@@ -35,7 +35,7 @@ public class RegistrationRequest extends ApiBaseRequest {
 			
 			HttpPost registration = new HttpPost(C.api.url.REGISTRATION);
 			JSONObject json = new JSONObject();
-			json.put("nickName", mNickname);
+			json.put("nick", mNick);
 			json.put("email", mEmail);
 			json.put("password", mPassword);
 			StringEntity entity = new StringEntity(json.toString(), "UTF-8");

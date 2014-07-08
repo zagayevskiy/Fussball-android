@@ -39,6 +39,7 @@ public final class C {
 			public static final class key{
 				public static final String ACCESS_TOKEN = "accessToken";
 				public static final String MESSAGE = "message";
+				public static final String ERRORS = "errors";
 			}
 		}
 	}

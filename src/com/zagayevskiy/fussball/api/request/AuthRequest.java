@@ -61,8 +61,10 @@ public class AuthRequest extends ApiBaseRequest{
 			
 		}catch (IOException e){
 			notifyApiResult(FAIL_NETWORK);
+			Log.e("auth", "fail", e);
 		}catch (JSONException e) {
 			notifyApiResult(FAIL);
+			Log.e("auth", "fail", e);
 		}
 	}
 
