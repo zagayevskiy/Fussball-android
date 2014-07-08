@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class NewGameFragment extends Fragment implements View.OnClickListener, ResultListener {
 
@@ -133,6 +134,10 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 		mProgressDialog.cancel();
 		if(resultCode == ApiBaseRequest.SUCCESS){
 			getActivity().finish();
+		}else if(resultCode == ApiBaseRequest.FAIL_NETWORK){
+			Toast.makeText(getActivity(), "Can't save game: network error", Toast.LENGTH_LONG).show();
+		}else{
+			Toast.makeText(getActivity(), "Can't save game", Toast.LENGTH_LONG).show();
 		}
 	}
 }

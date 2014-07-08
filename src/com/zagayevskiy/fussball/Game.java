@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
-import android.util.Log;
 
 import com.zagayevskiy.fussball.utils.C;
 
@@ -44,17 +43,49 @@ public class Game {
 		FIELD_PLAYER2_RATING_DELTA
 	};
 	
-	private long id;
+	private long id = INVALID_ID;
 	private String mPlayer1Nick;
 	private String mPlayer2Nick;
 	private int mScore1;
 	private int mScore2;
+	private int mRatingDelta1;
+	private int mRatingDelta2;
 	
 	public Game(String nick1, String nick2, int score1, int score2){
 		mPlayer1Nick = nick1;
 		mPlayer2Nick = nick2;
 		mScore1 = score1;
 		mScore2 = score2;
+	}
+	
+	public Game(JSONObject json) throws JSONException{
+		final JSONObject side1 = json.getJSONObject("side1");
+		final JSONObject side2 = json.getJSONObject("side2");
+		final JSONObject player1 = side1.getJSONObject("player");
+		final JSONObject player2 = side2.getJSONObject("player");
+		mPlayer1Nick = player1.getString("nick");
+		mPlayer2Nick = player2.getString("nick");
+		mRatingDelta1 = player1.getInt("ratingDelta");
+		mRatingDelta2 = player2.getInt("ratingDelta");
+		mScore1 = side1.getInt("score");
+		mScore2 = side2.getInt("score");
+	}
+	
+	public ContentValues getDBContentValues(){
+		ContentValues values = new ContentValues();
+		
+		if(id != INVALID_ID){
+			values.put(FIELD_ID, id);
+		}
+		
+		values.put(FIELD_PLAYER1_NICK, mPlayer1Nick);
+		values.put(FIELD_PLAYER2_NICK, mPlayer2Nick);
+		values.put(FIELD_PLAYER1_RATING_DELTA, mRatingDelta1);
+		values.put(FIELD_PLAYER2_RATING_DELTA, mRatingDelta2);
+		values.put(FIELD_SCORE1, mScore1);
+		values.put(FIELD_SCORE2, mScore2);
+		
+		return values;
 	}
 	
 	public static List<ContentValues> fromJson(JSONArray array) throws JSONException{

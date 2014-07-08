@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentResolver;
+import android.util.Log;
 
 import com.zagayevskiy.fussball.Player;
 import com.zagayevskiy.fussball.api.Token;
@@ -36,9 +37,11 @@ public class AuthRequest extends ApiBaseRequest{
 		try{
 			String result = HttpHelper.syncHttpRequest(get);
 			
+			Log.e("auth", "result:" + result);
+			
 			JSONObject json = new JSONObject(result);
 			if(!json.has(C.api.json.key.ACCESS_TOKEN)){
-				//TODO: get more info and notify more codes!
+				//TODO: get more info and notify more codes!				
 				notifyApiResult(FAIL);
 				return;
 			}

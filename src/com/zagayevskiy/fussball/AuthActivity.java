@@ -1,35 +1,54 @@
 package com.zagayevskiy.fussball;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.LoaderManager.LoaderCallbacks;
 import android.app.ProgressDialog;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import com.zagayevskiy.fussball.api.ApiConnection;
 import com.zagayevskiy.fussball.api.ApiConnection.IBindUnbindListener;
 import com.zagayevskiy.fussball.api.IApiManager;
 import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
-import com.zagayevskiy.fussball.api.request.LoadGamesRequest;
-import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
 import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
 import com.zagayevskiy.fussball.api.request.AuthRequest;
+import com.zagayevskiy.fussball.api.request.LoadGamesRequest;
+import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
 
-public class AuthActivity extends FragmentActivity implements TextWatcher, IBindUnbindListener, IApiManager, ResultListener {
+public class AuthActivity extends FragmentActivity
+	implements TextWatcher, IBindUnbindListener, IApiManager, ResultListener, LoaderCallbacks<Cursor> {
 	
 	public static final String TAG = AuthActivity.class.getSimpleName();
 	
 	private static final int AUTH_REQUEST = 1;
 	
-	private EditText mAuthEmail, mAuthPassword;
+	private AutoCompleteTextView mAuthEmail;
+	private EditText mAuthPassword;
 	private View mButtonOk;
 	
 	private ProgressDialog mProgressDialog;
 	
 	private ApiConnection mApi;
+	
+	private ArrayAdapter<String> mAdapter;
+	
+	private static final String[] CONTACT_PROJECTION = {
+		ContactsContract.CommonDataKinds.Email.ADDRESS
+	};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +56,7 @@ public class AuthActivity extends FragmentActivity implements TextWatcher, IBind
 		
 		setContentView(R.layout.auth_activity);
 		
-		mAuthEmail = (EditText) findViewById(R.id.auth_email);
+		mAuthEmail = (AutoCompleteTextView) findViewById(R.id.auth_email);
 		mAuthPassword = (EditText) findViewById(R.id.auth_password);
 		mButtonOk = findViewById(R.id.auth_ok);
 		
@@ -62,6 +81,7 @@ public class AuthActivity extends FragmentActivity implements TextWatcher, IBind
 			}
 		});
 		
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	@Override
@@ -130,5 +150,34 @@ public class AuthActivity extends FragmentActivity implements TextWatcher, IBind
 			startActivity(new Intent(this, MainActivity.class));
 			finish();
 		}
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		return new CursorLoader(this,
+            Uri.withAppendedPath(
+                    ContactsContract.Profile.CONTENT_URI,
+                    ContactsContract.Contacts.Data.CONTENT_DIRECTORY),
+            CONTACT_PROJECTION,
+
+            // Select only email addresses.
+            ContactsContract.Contacts.Data.MIMETYPE + " = ?",
+            new String[]{ ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE },
+            ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		List<String> emails = new ArrayList<String>(cursor.getCount());
+		while(cursor.moveToNext()){
+			emails.add(cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));
+		}
+		
+		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, emails);
+		mAuthEmail.setAdapter(mAdapter);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
 	}
 }
