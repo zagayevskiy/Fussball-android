@@ -62,6 +62,8 @@ public class LoadPlayersRequest extends ApiBaseRequest {
 				operations.add(ContentProviderOperation.newInsert(Player.URI).withValues(v).build());
 			}				
 			resolver.applyBatch(C.db.AUTHORITY, operations);
+			
+			notifyApiResult(SUCCESS);
 		
 		} catch (IOException e) {
 			notifyApiResult(FAIL_NETWORK);
