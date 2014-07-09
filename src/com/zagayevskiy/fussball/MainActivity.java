@@ -46,8 +46,8 @@ public class MainActivity extends FragmentActivity implements IBindUnbindListene
 	
 	@Override
 	protected void onStop() {
-		super.onStop();
 		mApi.unbind();
+		super.onStop();		
 	}
 	
 	@Override
@@ -66,17 +66,6 @@ public class MainActivity extends FragmentActivity implements IBindUnbindListene
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem item = menu.add("Update");
-		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-			
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				mApi.request(new LoadPlayersRequest(null), 0);
-				mApi.request(new LoadGamesRequest(null), 0);
-				return true;
-			}
-		});
 		return super.onCreateOptionsMenu(menu);
 	}
 }

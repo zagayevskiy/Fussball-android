@@ -2,4 +2,9 @@
 <resources>
     <color name="win">#00ff00</color>
     <color name="lose">#ff0000</color>
+    
+    <item name="refresh1" type="color">@android:color/holo_blue_bright</item>
+    <item name="refresh2" type="color">@android:color/holo_green_dark</item>
+    <item name="refresh3" type="color">@android:color/holo_orange_light</item>
+    <item name="refresh4" type="color">@android:color/holo_red_light</item>
 </resources>
