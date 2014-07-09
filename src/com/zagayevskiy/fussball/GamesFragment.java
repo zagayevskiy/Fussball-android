@@ -8,6 +8,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,7 +18,11 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class GamesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>  {
+import com.zagayevskiy.fussball.api.IApiManager;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
+import com.zagayevskiy.fussball.api.request.LoadGamesRequest;
+
+public class GamesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, ResultListener, OnRefreshListener  {
 	
 	private static final String TAG = GamesFragment.class.getName();
 	
@@ -33,10 +39,17 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	};
 	
 	private SimpleCursorAdapter mAdapter;
+	private SwipeRefreshLayout mRefreshLayout;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
         
+		View root = inflater.inflate(R.layout.games_list, container, false);
+		
+		mRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.games_swipe_to_refresh);
+		mRefreshLayout.setOnRefreshListener(this);
+		mRefreshLayout.setColorSchemeResources(R.color.refresh1, R.color.refresh2, R.color.refresh3, R.color.refresh4);
+		
         setHasOptionsMenu(true);
 		
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.games_list_item, null, FROM_COLUMNS, TO_VIEWS, 0);    
@@ -44,7 +57,7 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
         setListAdapter(mAdapter);
         getLoaderManager().initLoader(0, null, this);
         
-		return super.onCreateView(inflater, container, savedInstanceState);
+		return root;
 	}
 
 	@Override
@@ -79,5 +92,15 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mAdapter.swapCursor(null);
+	}
+
+	@Override
+	public void onApiResult(int requestCode, int resultCode) {
+		mRefreshLayout.setRefreshing(false);
+	}
+
+	@Override
+	public void onRefresh() {
+		((IApiManager) getActivity()).getApi().request(new LoadGamesRequest(this), 0);
 	}
 }

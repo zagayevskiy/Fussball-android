@@ -8,10 +8,10 @@ import android.widget.TextView;
 
 public class GamesListViewBinder implements ViewBinder {
 
-	private final Context context;
+	private final Context mContext;
 	
 	public GamesListViewBinder(Context context) {
-		this.context = context;
+		this.mContext = context;
 	}
 	
 	@Override
@@ -31,10 +31,10 @@ public class GamesListViewBinder implements ViewBinder {
 				String value;
 				if(delta > 0){
 					value = "+" + String.valueOf(delta);
-					textView.setTextColor(context.getResources().getColor(R.color.win));
+					textView.setTextColor(mContext.getResources().getColor(R.color.win));
 				}else{
 					value = String.valueOf(delta);
-					textView.setTextColor(context.getResources().getColor(R.color.lose));
+					textView.setTextColor(mContext.getResources().getColor(R.color.lose));
 				}
 				textView.setText(value);
 				return true;
