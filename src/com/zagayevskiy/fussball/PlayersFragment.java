@@ -44,7 +44,7 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new CursorLoader(getActivity(), Player.URI, Player.FULL_PROJECTION, null, null, null);
+		return new CursorLoader(getActivity(), Player.URI, Player.FULL_PROJECTION, null, null, Player.ORDER_RATING_DESC);
 	}
 
 	@Override

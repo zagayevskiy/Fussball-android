@@ -37,6 +37,8 @@ public class Player {
 	public static final String WHERE_EMAIL = FIELD_EMAIL_HASH + "=?";
 	public static final String WHERE_IS_OWNER = FIELD_IS_OWNER + "=?";
 	
+	public static final String ORDER_RATING_DESC = FIELD_RATING + " DESC";
+	
 	public static final String[] FULL_PROJECTION = new String[]{
 		FIELD_ID,
 		FIELD_EMAIL_HASH,

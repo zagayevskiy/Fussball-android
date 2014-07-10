@@ -24,6 +24,7 @@ import com.zagayevskiy.fussball.api.request.LoadGamesRequest;
 
 public class GamesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, ResultListener, OnRefreshListener  {
 	
+	@SuppressWarnings("unused")
 	private static final String TAG = GamesFragment.class.getName();
 	
 	private final static String[] FROM_COLUMNS = {
@@ -81,7 +82,7 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new CursorLoader(getActivity(), Game.URI, Game.FULL_PROJECTION, null, null, null);
+		return new CursorLoader(getActivity(), Game.URI, Game.FULL_PROJECTION, null, null, Game.ORDER_DATE_DESC);
 	}
 
 	@Override

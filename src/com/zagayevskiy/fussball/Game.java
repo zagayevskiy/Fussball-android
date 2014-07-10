@@ -1,7 +1,11 @@
 package com.zagayevskiy.fussball;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,6 +14,7 @@ import org.json.JSONObject;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
+import android.util.Log;
 
 import com.zagayevskiy.fussball.utils.C;
 
@@ -33,6 +38,8 @@ public class Game {
 	
 	public static final long INVALID_ID = -1L;
 	
+	public static final String ORDER_DATE_DESC = FIELD_TIMESTAMP + " DESC";
+	
 	public static final String[] FULL_PROJECTION = {
 		FIELD_ID,
 		FIELD_PLAYER1_NICK,
@@ -40,8 +47,12 @@ public class Game {
 		FIELD_SCORE1,
 		FIELD_SCORE2,
 		FIELD_PLAYER1_RATING_DELTA,
-		FIELD_PLAYER2_RATING_DELTA
+		FIELD_PLAYER2_RATING_DELTA,
+		FIELD_TIMESTAMP
 	};
+	
+	//TODO FIXME
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'", Locale.US);
 	
 	private long id = INVALID_ID;
 	private String mPlayer1Nick;
@@ -50,12 +61,14 @@ public class Game {
 	private int mScore2;
 	private int mRatingDelta1;
 	private int mRatingDelta2;
+	private long mTimestamp;
 	
 	public Game(String nick1, String nick2, int score1, int score2){
 		mPlayer1Nick = nick1;
 		mPlayer2Nick = nick2;
 		mScore1 = score1;
 		mScore2 = score2;
+		mTimestamp = System.currentTimeMillis();
 	}
 	
 	public Game(JSONObject json) throws JSONException{
@@ -69,6 +82,14 @@ public class Game {
 		mRatingDelta2 = player2.getInt("ratingDelta");
 		mScore1 = side1.getInt("score");
 		mScore2 = side2.getInt("score");
+		
+		//TODO FIXME
+		try{
+			mTimestamp = DATE_FORMAT.parse(json.getString("date")).getTime();
+		}catch(ParseException e){
+			Log.e(TABLE_NAME, "parse", e);
+			mTimestamp = 0L;
+		}
 	}
 	
 	public ContentValues getDBContentValues(){
@@ -84,6 +105,7 @@ public class Game {
 		values.put(FIELD_PLAYER2_RATING_DELTA, mRatingDelta2);
 		values.put(FIELD_SCORE1, mScore1);
 		values.put(FIELD_SCORE2, mScore2);
+		values.put(FIELD_TIMESTAMP, mTimestamp);
 		
 		return values;
 	}
@@ -107,6 +129,15 @@ public class Game {
 			values.put(FIELD_SCORE1, side1.getInt("score"));
 			values.put(FIELD_SCORE2, side2.getInt("score"));
 			
+			long timestamp = 0L;
+			
+			//TODO FIXME
+			try{
+				timestamp = DATE_FORMAT.parse(item.getString("date")).getTime();
+			}catch(ParseException e){
+				Log.e(TABLE_NAME, "parse", e);
+			}
+			values.put(FIELD_TIMESTAMP, timestamp);
 			result.add(values);
 		}
 		
