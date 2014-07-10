@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,7 +47,9 @@ public class RegistrationRequest extends ApiBaseRequest {
 			String result = HttpHelper.syncHttpRequest(registration);
 			json = new JSONObject(result);
 			Log.i(TAG, result);
-			if(json.getBoolean("error")){
+			
+			JSONArray errors = json.getJSONArray(C.api.json.key.ERRORS);
+			if(errors.length() > 0){
 				notifyApiResult(FAIL);
 				return;
 			}
