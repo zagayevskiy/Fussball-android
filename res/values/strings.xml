@@ -4,6 +4,7 @@
     <string name="empty"></string>
 
     <string name="hint_email">Your email</string>
+    <string name="hint_email_or_nick">Your email or nick</string>
     <string name="hint_nick">Your nick</string>
     <string name="hint_password">Your password</string>
     <string name="hint_player1_score">Player #1 score</string>

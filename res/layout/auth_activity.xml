@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:hint="@string/hint_email"
+            android:hint="@string/hint_email_or_nick"
             android:inputType="textEmailAddress"
             android:completionThreshold="1"
             android:singleLine="true" />

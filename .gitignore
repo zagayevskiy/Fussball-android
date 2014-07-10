@@ -5,3 +5,4 @@ bin/
 release/
 obj/
 gen/
+res/values/com_crashlytics_export_strings.xml
