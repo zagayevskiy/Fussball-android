@@ -22,6 +22,8 @@
     <string name="tab_games">Games</string>
     
     <string name="menu_new_game">New game</string>
+    <string name="played_won">played/won:</string>
+    <string name="played_won_delimeter">/</string>
     
     <string name="select_player">Select player</string>
     <string name="select_player1">Select player #1</string>

@@ -30,7 +30,9 @@ public class DBAdapter {
 				+ Player.FIELD_EMAIL_HASH + " TEXT UNIQUE NOT NULL,"
 				+ Player.FIELD_NICK + " TEXT UNIQUE NOT NULL,"
 				+ Player.FIELD_RATING + " DOUBLE NOT NULL,"
-				+ Player.FIELD_IS_OWNER + " INTEGER"
+				+ Player.FIELD_IS_OWNER + " INTEGER,"
+				+ Player.FIELD_TOTAL_PLAYED + " INTEGER NOT NULL,"
+				+ Player.FIELD_TOTAL_WON + " INTEGER NOT NULL"
 			+ ");";
 		
 		private static final String TABLE_GAMES_CREATE = "CREATE TABLE IF NOT EXISTS "

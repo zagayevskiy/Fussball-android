@@ -27,8 +27,8 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 		
 		View root = inflater.inflate(R.layout.players_list, container, false);
 		
-		String[] fromColumns = { Player.FIELD_NICK, Player.FIELD_RATING, Player.FIELD_EMAIL_HASH };
-        int[] toViews = {android.R.id.text1, android.R.id.text2, R.id.player_photo };
+		String[] fromColumns = { Player.FIELD_NICK, Player.FIELD_RATING, Player.FIELD_TOTAL_PLAYED, Player.FIELD_TOTAL_WON, Player.FIELD_EMAIL_HASH };
+        int[] toViews = { R.id.nick, R.id.rating, R.id.total_played, R.id.total_won, R.id.player_photo };
 		
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.players_list_item, null, fromColumns, toViews, 0);
         mAdapter.setViewBinder(new PlayersListViewBinder(getActivity()));

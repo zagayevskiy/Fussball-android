@@ -21,8 +21,6 @@ public class PlayersListViewBinder implements ViewBinder {
 	public boolean setViewValue(View v, Cursor cursor, int columnIndex) {
 		
 		switch(v.getId()){
-//			case android.R.id.text1:
-//			case android.R.id.text2:
 		
 			case R.id.player_photo:
 				gravatar.resolve(mContext, cursor.getString(columnIndex), 0, 

@@ -20,6 +20,8 @@ public class Player {
 	public static final String FIELD_NICK = "nick";	
 	public static final String FIELD_RATING = "rating";
 	public static final String FIELD_IS_OWNER = "isowner";
+	public static final String FIELD_TOTAL_PLAYED = "totalPlayed";
+	public static final String FIELD_TOTAL_WON = "totalWon";
 	
 	public static final String CONTENT_TYPE = C.db.BASE_CONTENT_TYPE + ".user";
 
@@ -44,7 +46,9 @@ public class Player {
 		FIELD_EMAIL_HASH,
 		FIELD_NICK,
 		FIELD_RATING,
-		FIELD_IS_OWNER
+		FIELD_IS_OWNER,
+		FIELD_TOTAL_PLAYED,
+		FIELD_TOTAL_WON
 	};
 	
 	public static final String[] SEARCH_PROJECTION = new String[]{
@@ -60,6 +64,8 @@ public class Player {
 	private String mNick;
 	private double mRating;
 	private boolean mIsOwner; 
+	private int mTotalPlayed;
+	private int mTotalWon;
 	
 	public Player(JSONObject json) throws JSONException{
 		mId = INVALID_ID;
@@ -67,6 +73,9 @@ public class Player {
 		mNick = json.getString(FIELD_NICK);
 		mRating = json.getDouble(FIELD_RATING);
 		mIsOwner = false;
+		mTotalPlayed = json.getInt(FIELD_TOTAL_PLAYED);
+		mTotalWon = json.getInt(FIELD_TOTAL_WON);
+		
 	}
 	
 	public Player(Cursor c){
@@ -75,6 +84,8 @@ public class Player {
 		mNick = c.getString(c.getColumnIndex(FIELD_NICK));
 		mRating = c.getDouble(c.getColumnIndex(FIELD_RATING));
 		mIsOwner = c.getInt(c.getColumnIndex(FIELD_IS_OWNER)) == OWNER;
+		mTotalPlayed = c.getInt(c.getColumnIndex(FIELD_TOTAL_PLAYED));
+		mTotalWon = c.getInt(c.getColumnIndex(FIELD_TOTAL_WON));
 	}
 	
 	public long getId(){
@@ -107,6 +118,8 @@ public class Player {
 		result.put(FIELD_NICK, mNick);
 		result.put(FIELD_RATING, mRating);
 		result.put(FIELD_IS_OWNER, mIsOwner ? OWNER : NOT_OWNER);
+		result.put(FIELD_TOTAL_PLAYED, mTotalPlayed);
+		result.put(FIELD_TOTAL_WON, mTotalWon);
 		
 		return result;
 	}
@@ -118,12 +131,15 @@ public class Player {
 		for(int i = 0; i < count; ++i){
 			JSONObject item = array.getJSONObject(i);
 			
-			final String email = item.getString(FIELD_EMAIL_HASH);
 			ContentValues values = new ContentValues();
-			values.put(FIELD_EMAIL_HASH, email);
+			
+			values.put(FIELD_EMAIL_HASH, item.getString(FIELD_EMAIL_HASH));
 			values.put(FIELD_NICK, item.getString(FIELD_NICK));
 			values.put(FIELD_RATING, item.getDouble(FIELD_RATING));
 			values.put(FIELD_IS_OWNER, NOT_OWNER);
+			values.put(FIELD_TOTAL_PLAYED, item.getInt(FIELD_TOTAL_PLAYED));
+			values.put(FIELD_TOTAL_WON, item.getInt(FIELD_TOTAL_WON));
+			
 			result[i] = values;
 		}
 		
