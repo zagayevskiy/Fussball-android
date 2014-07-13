@@ -1,11 +1,7 @@
 package com.zagayevskiy.fussball;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +10,6 @@ import org.json.JSONObject;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
-import android.util.Log;
 
 import com.zagayevskiy.fussball.utils.C;
 
