@@ -98,6 +98,17 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 			}
 			startActivityForResult(intent, requestCode);
 		}else if(id == R.id.ok){
+			
+			//TODO: FIXME it's not okay, just simple bug fix
+			if(mScore1.getText().length() == 0 
+				||mScore2.getText().length() == 0
+				|| mPlayer1 == null 
+				|| mPlayer2 == null
+				|| mScore1.getText().toString().equals(mScore2.getText().toString())){
+				Toast.makeText(getActivity(), "Something wrong in your data, yo!", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
 			final int s1 = Integer.parseInt(mScore1.getText().toString());
 			final int s2 = Integer.parseInt(mScore2.getText().toString());
 			
