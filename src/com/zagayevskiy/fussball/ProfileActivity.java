@@ -30,8 +30,7 @@ public class ProfileActivity extends FragmentActivity implements IApiManager{
 		final String nick = intent.getStringExtra(KEY_PLAYER_NICK);
 				
 		Bundle args = new Bundle();
-		args.putString(GamesFragment.KEY_WHERE_CLAUSE, Game.WHERE_PLAYER1_OR_PLAYER2_NICK);
-		args.putStringArray(GamesFragment.KEY_WHERE_ARGUMENTS, new String[] { nick, nick } );
+		args.putString(GamesFragment.KEY_OPPONENT_ONE_NICK, nick);
 		Fragment fragment = new GamesFragment();
 		fragment.setArguments(args);
 		

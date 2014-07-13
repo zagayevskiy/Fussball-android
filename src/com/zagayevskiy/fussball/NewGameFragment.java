@@ -47,11 +47,28 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 		mSelectPlayer2.setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		
-		setPlayer1(Player.getOwner(getActivity()));
-		
 		mProgressDialog = new ProgressDialog(getActivity());
 		mProgressDialog.setCancelable(false);
 		mProgressDialog.setTitle(R.string.new_game_in_progress);
+		
+		Intent intent = getActivity().getIntent();
+		if(intent == null || !intent.hasExtra(NewGameActivity.KEY_PLAYER1_NICK)){
+			//Has no wanted players => set by default
+			setPlayer1(Player.getOwner(getActivity()));
+		}else{
+			//Has player1 => set him
+			final String nick1 = intent.getStringExtra(NewGameActivity.KEY_PLAYER1_NICK);
+			setPlayer1(Player.getSingle(getActivity(), Player.WHERE_NICK, nick1, null));
+			
+			if(intent.hasExtra(NewGameActivity.KEY_PLAYER2_NICK)){
+				//Has player 2 => set him
+				final String nick2 = intent.getStringExtra(NewGameActivity.KEY_PLAYER2_NICK);
+				setPlayer2(Player.getSingle(getActivity(), Player.WHERE_NICK, nick2, null));
+			}else{
+				//Has no player 2 => set by default
+				setPlayer2(Player.getOwner(getActivity()));
+			}
+		}
 		
 		return v;
 	}
@@ -120,11 +137,17 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 	}
 	
 	private void setPlayer1(Player player){
+		if(player == null || player.equals(mPlayer2)){
+			return;
+		}
 		mPlayer1 = player;
 		mSelectPlayer1.setText(player.getNick());
 	}
 	
 	private void setPlayer2(Player player){
+		if(player == null || player.equals(mPlayer1)){
+			return; 
+		}
 		mPlayer2 = player;
 		mSelectPlayer2.setText(player.getNick());
 	}

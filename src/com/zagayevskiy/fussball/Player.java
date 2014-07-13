@@ -36,7 +36,7 @@ public class Player {
 	public static final String WHERE_ID = FIELD_ID + "=?";
 	public static final String WHERE_ID_NOT_IN_FMT = FIELD_ID + " NOT IN ( %s )";
 	
-	public static final String WHERE_EMAIL = FIELD_EMAIL_HASH + "=?";
+	public static final String WHERE_NICK = FIELD_NICK + "=?";
 	public static final String WHERE_IS_OWNER = FIELD_IS_OWNER + "=?";
 	
 	public static final String ORDER_RATING_DESC = FIELD_RATING + " DESC";
@@ -123,6 +123,11 @@ public class Player {
 		result.put(FIELD_TOTAL_WON, mTotalWon);
 		
 		return result;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return (o == null) ? false : (o instanceof Player ? mNick.equals(((Player)o).getNick()) : false); 
 	}
 	
 	public static final ContentValues[] jsonToDBContentValues(JSONArray array) throws JSONException{

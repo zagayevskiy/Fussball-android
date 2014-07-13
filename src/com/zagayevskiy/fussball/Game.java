@@ -33,7 +33,17 @@ public class Game {
 	
 	public static final long INVALID_ID = -1L;
 	
-	public static final String WHERE_PLAYER1_OR_PLAYER2_NICK = FIELD_PLAYER1_NICK + "=? OR " + FIELD_PLAYER2_NICK + "=?"; 
+	/**
+	 * whereArgs should be {nick, nick}
+	 */
+	public static final String WHERE_FOR_ONE_PLAYER = FIELD_PLAYER1_NICK + "=? OR " + FIELD_PLAYER2_NICK + "=?"; 
+	
+	/**
+	 * whereArgs should be {nick1, nick2, nick1, nick2}
+	 */
+	public static final String WHERE_FOR_TWO_PLAYERS = 
+		"(" + FIELD_PLAYER1_NICK + "=? AND " + FIELD_PLAYER2_NICK + "=?) OR"
+		+ "(" + FIELD_PLAYER2_NICK + "=? AND " + FIELD_PLAYER1_NICK + "=?)"; 
 	
 	public static final String ORDER_DATE_DESC = FIELD_ID + " DESC";
 	
@@ -139,5 +149,5 @@ public class Game {
 		json.put("side2", side);
 		
 		return json;
-	}	
+	}
 }

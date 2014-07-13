@@ -9,6 +9,10 @@ import android.support.v4.app.FragmentActivity;
 
 public class NewGameActivity extends FragmentActivity implements IApiManager, IBindUnbindListener {
 
+	public static final String TAG = NewGameActivity.class.getName();
+	public static final String KEY_PLAYER1_NICK = TAG + "_player1";
+	public static final String KEY_PLAYER2_NICK = TAG + "_player2";
+	
 	private ApiConnection mApi;
 	
 	@Override

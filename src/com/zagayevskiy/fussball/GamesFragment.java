@@ -10,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,8 +27,11 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	
 	private static final String TAG = GamesFragment.class.getName();
 	
-	public static final String KEY_WHERE_CLAUSE = TAG + "_where_clause";
-	public static final String KEY_WHERE_ARGUMENTS = TAG + "_where_args";
+	/**
+	 * This 
+	 */
+	public static final String KEY_OPPONENT_ONE_NICK = TAG + "_opp1";
+	public static final String KEY_OPPONENT_TWO_NICK = TAG + "_opp2";
 	
 	private final static String[] FROM_COLUMNS = {
 		Game.FIELD_PLAYER1_NICK, Game.FIELD_PLAYER2_NICK,		
@@ -46,6 +50,9 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	
 	private String mWhere;
 	private String[] mWhereArgs;
+	
+	private String mOpponentOneNick;
+	private String mOpponentTwoNick;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -85,8 +92,14 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
-				
-				startActivity(new Intent(getActivity(), NewGameActivity.class));
+				Intent intent = new Intent(getActivity(), NewGameActivity.class);
+				if(mOpponentOneNick != null){
+					intent.putExtra(NewGameActivity.KEY_PLAYER1_NICK, mOpponentOneNick);
+					if(mOpponentTwoNick != null){
+						intent.putExtra(NewGameActivity.KEY_PLAYER2_NICK, mOpponentTwoNick);
+					}
+				}
+				startActivity(intent);
 				
 				return true;
 			}
@@ -120,9 +133,33 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	}
 	
 	private void fillWhere(Bundle arguments){
+		if(arguments.containsKey(KEY_OPPONENT_ONE_NICK)){
+			final String nick1 = arguments.getString(KEY_OPPONENT_ONE_NICK);
+			
+			if(nick1 == null || nick1.isEmpty()){
+				return;
+			}
+			mOpponentOneNick = nick1;
+			
+			if(arguments.containsKey(KEY_OPPONENT_TWO_NICK)){
+				final String nick2 = arguments.getString(KEY_OPPONENT_TWO_NICK);
+				
+				if(nick2 != null && !nick1.equals(nick2)){
+					mOpponentTwoNick = nick2;
+					mWhere = Game.WHERE_FOR_TWO_PLAYERS;
+					mWhereArgs = new String[]{
+						nick1, nick2, nick1, nick2
+					};
+					return;
+				}
+			}
+			
+			mWhere = Game.WHERE_FOR_ONE_PLAYER;
+			mWhereArgs = new String[]{
+				nick1, nick1
+			};
+		}
 		
-		mWhere = arguments.getString(KEY_WHERE_CLAUSE);
-		mWhereArgs = arguments.getStringArray(KEY_WHERE_ARGUMENTS);
 		
 	}
 }
