@@ -38,6 +38,8 @@ public class Game {
 	
 	public static final long INVALID_ID = -1L;
 	
+	public static final String WHERE_PLAYER1_OR_PLAYER2_NICK = FIELD_PLAYER1_NICK + "=? OR " + FIELD_PLAYER2_NICK + "=?"; 
+	
 	public static final String ORDER_DATE_DESC = FIELD_ID + " DESC";
 	
 	public static final String[] FULL_PROJECTION = {

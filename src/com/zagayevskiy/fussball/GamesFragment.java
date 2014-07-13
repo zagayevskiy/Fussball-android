@@ -24,8 +24,10 @@ import com.zagayevskiy.fussball.api.request.LoadGamesRequest;
 
 public class GamesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, ResultListener, OnRefreshListener  {
 	
-	@SuppressWarnings("unused")
 	private static final String TAG = GamesFragment.class.getName();
+	
+	public static final String KEY_WHERE_CLAUSE = TAG + "_where_clause";
+	public static final String KEY_WHERE_ARGUMENTS = TAG + "_where_args";
 	
 	private final static String[] FROM_COLUMNS = {
 		Game.FIELD_PLAYER1_NICK, Game.FIELD_PLAYER2_NICK,		
@@ -41,6 +43,19 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	
 	private SimpleCursorAdapter mAdapter;
 	private SwipeRefreshLayout mRefreshLayout;
+	
+	private String mWhere;
+	private String[] mWhereArgs;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		Bundle arguments = getArguments();
+		if(arguments != null){
+			fillWhere(arguments);		
+		}
+	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
@@ -62,7 +77,7 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	}
 
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {	
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		MenuItem item = menu.add(R.string.menu_new_game);
 		item.setIcon(R.drawable.ic_action_new);
 		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -76,13 +91,12 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 				return true;
 			}
 		});
-		
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new CursorLoader(getActivity(), Game.URI, Game.FULL_PROJECTION, null, null, Game.ORDER_DATE_DESC);
+		return new CursorLoader(getActivity(), Game.URI, Game.FULL_PROJECTION, mWhere, mWhereArgs, Game.ORDER_DATE_DESC);
 	}
 
 	@Override
@@ -103,5 +117,12 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	@Override
 	public void onRefresh() {
 		((IApiManager) getActivity()).getApi().request(new LoadGamesRequest(this), 0);
+	}
+	
+	private void fillWhere(Bundle arguments){
+		
+		mWhere = arguments.getString(KEY_WHERE_CLAUSE);
+		mWhereArgs = arguments.getStringArray(KEY_WHERE_ARGUMENTS);
+		
 	}
 }

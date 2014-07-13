@@ -1,9 +1,6 @@
 package com.zagayevskiy.fussball;
 
-import com.zagayevskiy.fussball.api.IApiManager;
-import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
-import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
-
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -13,10 +10,14 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.zagayevskiy.fussball.api.IApiManager;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
+import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
 
 public class PlayersFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, ResultListener, OnRefreshListener {
 	
@@ -33,7 +34,7 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.players_list_item, null, fromColumns, toViews, 0);
         mAdapter.setViewBinder(new PlayersListViewBinder(getActivity()));
         setListAdapter(mAdapter);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(0, null, this);        
         
         mRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.players_swipe_to_refresh);
         mRefreshLayout.setOnRefreshListener(this);
@@ -60,12 +61,19 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 	@Override
 	public void onRefresh() {
 		((IApiManager) getActivity()).getApi().request(new LoadPlayersRequest(this), 0);
-		Log.e("onRefresh", "onRefresh");
 	}
 
 	@Override
 	public void onApiResult(int requestCode, int resultCode) {
 		mRefreshLayout.setRefreshing(false);
-		Log.e("onApiResult", "onApiResult");
+	}
+	
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Intent intent = new Intent(getActivity(), ProfileActivity.class);
+		Cursor c = (Cursor)mAdapter.getItem(position);
+		intent.putExtra(ProfileActivity.KEY_PLAYER_NICK, (c.getString(c.getColumnIndex(Player.FIELD_NICK))));
+		startActivity(intent);
 	}
 }
