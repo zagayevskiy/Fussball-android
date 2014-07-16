@@ -43,4 +43,10 @@ public final class C {
 			}
 		}
 	}
+	
+	public static final class intent{
+		public static final class action{
+			public static final String PLAYERS_LIST_LOADED = "com.zagayevskiy.fussball.action.PLAYERS_LIST_LOADED";
+		}
+	}
 }

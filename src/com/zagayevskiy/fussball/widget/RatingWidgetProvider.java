@@ -1,13 +1,15 @@
 package com.zagayevskiy.fussball.widget;
 
-import com.zagayevskiy.fussball.R;
-
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
+
+import com.zagayevskiy.fussball.R;
+import com.zagayevskiy.fussball.utils.C;
 
 public class RatingWidgetProvider extends AppWidgetProvider {
 
@@ -19,6 +21,20 @@ public class RatingWidgetProvider extends AppWidgetProvider {
 			updateWidget(context, appWidgetManager, id);
 		}
 
+	}
+	
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		super.onReceive(context, intent);
+		
+		if(C.intent.action.PLAYERS_LIST_LOADED.equalsIgnoreCase(intent.getAction())){
+			 ComponentName thisAppWidgetProvider = new ComponentName(context.getPackageName(), getClass().getName());
+		     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+		     int ids[] = appWidgetManager.getAppWidgetIds(thisAppWidgetProvider);
+		     for (int id : ids) {
+		    	 updateWidget(context, appWidgetManager, id);
+		     }
+		}		
 	}
 
 	private void updateWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {

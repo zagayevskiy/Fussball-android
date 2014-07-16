@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
 import android.util.Log;
@@ -64,6 +65,10 @@ public class LoadPlayersRequest extends ApiBaseRequest {
 			resolver.applyBatch(C.db.AUTHORITY, operations);
 			
 			notifyApiResult(SUCCESS);
+			
+			//notify widget
+			Intent intent = new Intent(C.intent.action.PLAYERS_LIST_LOADED);
+			getApiService().sendBroadcast(intent);
 		
 		} catch (IOException e) {
 			notifyApiResult(FAIL_NETWORK);
