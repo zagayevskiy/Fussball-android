@@ -57,9 +57,6 @@ public class RatingRemoteViewsFactory implements RemoteViewsFactory {
 		views.setTextViewText(R.id.total_played, String.valueOf(player.getTotalPlayed()));
 		views.setTextViewText(R.id.total_won, String.valueOf(player.getTotalWon()));
 		
-		Intent intent = new Intent();
-		views.setOnClickFillInIntent(android.R.id.text1, intent);
-		
 		return views;
 	}
 

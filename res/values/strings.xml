@@ -32,4 +32,6 @@
     <string name="permission_write_database_label">Write Fussball database</string>
     <string name="permission_write_database_description">Write players data to Fussball database</string>
     
+    <string name="widget_title">Fussball Rating</string>
+    
 </resources>
