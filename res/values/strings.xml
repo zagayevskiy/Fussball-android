@@ -29,4 +29,7 @@
     <string name="select_player1">Select player #1</string>
     <string name="select_player2">Select player #2</string>
     
+    <string name="permission_write_database_label">Write Fussball database</string>
+    <string name="permission_write_database_description">Write players data to Fussball database</string>
+    
 </resources>

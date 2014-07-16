@@ -7,10 +7,18 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 
+    <permission
+        android:name="com.zagayevskiy.fussball.permission.WRITE_DATABASE"
+        android:description="@string/permission_write_database_description"
+        android:label="@string/permission_write_database_label"
+        android:permissionGroup="android.permission-group.PERSONAL_INFO"
+        android:protectionLevel="normal" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.zagayevskiy.fussball.permission.WRITE_DATABASE" />
 
     <application
         android:allowBackup="true"
@@ -49,11 +57,27 @@
             android:name="com.zagayevskiy.fussball.api.ApiService"
             android:exported="false" >
         </service>
+        <service
+            android:name="com.zagayevskiy.fussball.widget.RatingRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" >
+        </service>
 
         <provider
             android:name="com.zagayevskiy.fussball.db.DBProvider"
             android:authorities="com.zagayevskiy.fussball.db"
-            android:exported="false" />
+            android:exported="true"
+            android:writePermission="com.zagayevskiy.fussball.permission.WRITE_DATABASE" />
+
+        <receiver android:name="com.zagayevskiy.fussball.widget.RatingWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_metadata" >
+            </meta-data>
+        </receiver>
 
         <meta-data
             android:name="com.crashlytics.ApiKey"
