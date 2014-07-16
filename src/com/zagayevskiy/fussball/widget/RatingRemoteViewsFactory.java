@@ -3,6 +3,7 @@ package com.zagayevskiy.fussball.widget;
 import java.util.ArrayList;
 
 import com.zagayevskiy.fussball.Player;
+import com.zagayevskiy.fussball.R;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -14,7 +15,7 @@ import android.widget.RemoteViewsService.RemoteViewsFactory;
 public class RatingRemoteViewsFactory implements RemoteViewsFactory {
 	
 	private Context mContext;
-	private ArrayList<String> mData;
+	private ArrayList<Player> mData;
 	
 	public RatingRemoteViewsFactory(Context context, Intent intent){
 		mContext = context;
@@ -22,7 +23,7 @@ public class RatingRemoteViewsFactory implements RemoteViewsFactory {
 
 	@Override
 	public void onCreate() {
-		mData = new ArrayList<String>();
+		mData = new ArrayList<Player>();
 	}
 
 	@Override
@@ -31,10 +32,8 @@ public class RatingRemoteViewsFactory implements RemoteViewsFactory {
 		
 		ContentResolver resolver = mContext.getContentResolver();
 		Cursor cursor = resolver.query(Player.URI, Player.FULL_PROJECTION, null, null, Player.ORDER_RATING_DESC);
-		final int columnNick = cursor.getColumnIndex(Player.FIELD_NICK);
-		while(cursor.moveToNext()){
-			mData.add(cursor.getString(columnNick));
-		}
+		
+		mData = Player.fromCursor(cursor);
 		
 	}
 
@@ -49,9 +48,15 @@ public class RatingRemoteViewsFactory implements RemoteViewsFactory {
 
 	@Override
 	public RemoteViews getViewAt(int position) {
-		RemoteViews views = new RemoteViews(mContext.getPackageName(), android.R.layout.simple_list_item_1);
+		RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.widget_players_list_item);
 		
-		views.setTextViewText(android.R.id.text1, mData.get(position));
+		final Player player = mData.get(position);
+		
+		views.setTextViewText(R.id.nick, player.getNick());
+		views.setTextViewText(R.id.rating, String.valueOf(player.getRating()));
+		views.setTextViewText(R.id.total_played, String.valueOf(player.getTotalPlayed()));
+		views.setTextViewText(R.id.total_won, String.valueOf(player.getTotalWon()));
+		
 		Intent intent = new Intent();
 		views.setOnClickFillInIntent(android.R.id.text1, intent);
 		

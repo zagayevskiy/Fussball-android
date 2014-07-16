@@ -1,5 +1,7 @@
 package com.zagayevskiy.fussball;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +11,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.zagayevskiy.fussball.utils.C;
 
@@ -101,6 +104,18 @@ public class Player {
 		return mNick;
 	}
 	
+	public int getRating(){
+		return (int) mRating;
+	}
+	
+	public int getTotalPlayed(){
+		return mTotalPlayed;
+	}
+	
+	public int getTotalWon(){
+		return mTotalWon;
+	}
+	
 	public void makeOwner(){
 		mIsOwner = true;
 	}
@@ -170,5 +185,15 @@ public class Player {
 		c.close();
 		
 		return player;
+	}
+	
+	public static final ArrayList<Player> fromCursor(Cursor c){
+		ArrayList<Player> result = new ArrayList<Player>(c.getCount());
+		
+		while(c.moveToNext()){
+			result.add(new Player(c));
+		}
+		
+		return result;
 	}
 }
