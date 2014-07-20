@@ -58,6 +58,10 @@
             android:name="com.zagayevskiy.fussball.ProfileActivity"
             android:exported="false" >
         </activity>
+        <activity
+            android:name="com.zagayevskiy.fussball.gcm.GcmActivity"
+            android:exported="true" >
+        </activity>
 
         <service
             android:name="com.zagayevskiy.fussball.api.ApiService"
