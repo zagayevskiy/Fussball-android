@@ -44,6 +44,19 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 	}
 
 	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		
+		ListView list = getListView();
+	        
+        if(list.getHeaderViewsCount() == 0){
+	        list.addHeaderView(new View(getActivity()));
+	        list.addFooterView(new View(getActivity()));
+        }
+		
+	}
+	
+	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		return new CursorLoader(getActivity(), Player.URI, Player.FULL_PROJECTION, null, null, Player.ORDER_RATING_DESC);
 	}
