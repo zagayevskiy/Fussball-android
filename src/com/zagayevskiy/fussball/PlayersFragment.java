@@ -62,14 +62,12 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 		mAdapter.clear();
 		mAdapter.addAll(Player.fromCursor(data));
 		mAdapter.notifyDataSetChanged();
-//		mAdapter.swapCursor(data);	
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mAdapter.clear();
 		mAdapter.notifyDataSetChanged();
-//		mAdapter.swapCursor(null);
 	}
 
 	@Override
@@ -86,8 +84,9 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		Intent intent = new Intent(getActivity(), ProfileActivity.class);
-		Cursor c = (Cursor)mAdapter.getItem(position);
-		intent.putExtra(ProfileActivity.KEY_PLAYER_NICK, (c.getString(c.getColumnIndex(Player.FIELD_NICK))));
+	
+		Player player = mAdapter.getItem(position - getListView().getHeaderViewsCount());
+		intent.putExtra(ProfileActivity.KEY_PLAYER_NICK, player.getNick());
 		startActivity(intent);
 	}
 }

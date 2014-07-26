@@ -1,8 +1,5 @@
 package com.zagayevskiy.fussball;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,38 +13,9 @@ import com.zagayevskiy.fussball.utils.GravatarResolver;
 public class PlayersListAdapter extends ArrayAdapter<Player>{
 
 	private final GravatarResolver mGravatar = GravatarResolver.getInstance();
-	private ArrayList<Player> mPlayers = new ArrayList<Player>();
 	
 	public PlayersListAdapter(Context context) {
 		super(context, R.layout.players_list_item);
-	}
-	
-	@Override
-	public int getCount(){
-		return mPlayers.size();
-	}
-	
-	@Override
-	public void clear() {
-		super.clear();
-		mPlayers.clear();
-	}
-	
-	@Override
-	public void add(Player player) {
-		mPlayers.add(player);
-	}
-	
-	@Override
-	public void addAll(Collection<? extends Player> players) {
-		mPlayers.addAll(players);
-	}
-	
-	@Override
-	public void addAll(Player... players) {
-		for(Player p: players){
-			mPlayers.add(p);
-		}
 	}
 	
 	@Override
@@ -64,7 +32,7 @@ public class PlayersListAdapter extends ArrayAdapter<Player>{
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		Player player = mPlayers.get(position);
+		Player player = getItem(position);
 		mGravatar.resolve(getContext(), player.getEmailHash(), 0, 
 				new GravatarResolver.SimpleOnResolveListener(holder.playerPhoto));
 		holder.playerNick.setText(String.valueOf(position + 1) + ". " + player.getNick());
