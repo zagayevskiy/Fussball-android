@@ -7,12 +7,12 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.zagayevskiy.fussball.api.IApiManager;
@@ -21,18 +21,14 @@ import com.zagayevskiy.fussball.api.request.LoadPlayersRequest;
 
 public class PlayersFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, ResultListener, OnRefreshListener {
 	
-	private SimpleCursorAdapter mAdapter;
+	private ArrayAdapter<Player> mAdapter;
 	private SwipeRefreshLayout mRefreshLayout;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		View root = inflater.inflate(R.layout.players_list, container, false);
 		
-		String[] fromColumns = { Player.FIELD_NICK, Player.FIELD_RATING, Player.FIELD_TOTAL_PLAYED, Player.FIELD_TOTAL_WON, Player.FIELD_EMAIL_HASH };
-        int[] toViews = { R.id.nick, R.id.rating, R.id.total_played, R.id.total_won, R.id.player_photo };
-		
-        mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.players_list_item, null, fromColumns, toViews, 0);
-        mAdapter.setViewBinder(new PlayersListViewBinder(getActivity()));
+        mAdapter = new PlayersListAdapter(getActivity());
         setListAdapter(mAdapter);
         getLoaderManager().initLoader(0, null, this);        
         
@@ -63,12 +59,17 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		mAdapter.swapCursor(data);	
+		mAdapter.clear();
+		mAdapter.addAll(Player.fromCursor(data));
+		mAdapter.notifyDataSetChanged();
+//		mAdapter.swapCursor(data);	
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		mAdapter.swapCursor(null);
+		mAdapter.clear();
+		mAdapter.notifyDataSetChanged();
+//		mAdapter.swapCursor(null);
 	}
 
 	@Override

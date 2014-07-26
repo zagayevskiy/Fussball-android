@@ -94,8 +94,7 @@ public class Player {
 		return mId;
 	}
 	
-	@SuppressWarnings("unused")
-	private String getEmailHash(){
+	public String getEmailHash(){
 		return mEmailHash;
 	}
 	
