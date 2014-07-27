@@ -29,7 +29,7 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 		View root = inflater.inflate(R.layout.players_list, container, false);
 		
         mAdapter = new PlayersListAdapter(getActivity());
-        setListAdapter(mAdapter);
+        
         getLoaderManager().initLoader(0, null, this);        
         
         mRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.players_swipe_to_refresh);
@@ -46,10 +46,11 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 		ListView list = getListView();
 	        
         if(list.getHeaderViewsCount() == 0){
-//	        list.addHeaderView(new View(getActivity()));
-//	        list.addFooterView(new View(getActivity()));
+	        list.addHeaderView(new View(getActivity()));
+	        list.addFooterView(new View(getActivity()));
         }
 		
+        setListAdapter(mAdapter);
 	}
 	
 	@Override
