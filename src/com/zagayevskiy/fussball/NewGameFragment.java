@@ -1,10 +1,5 @@
 package com.zagayevskiy.fussball;
 
-import com.zagayevskiy.fussball.api.IApiManager;
-import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
-import com.zagayevskiy.fussball.api.request.NewGameRequest;
-import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,7 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.zagayevskiy.fussball.api.IApiManager;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
+import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
+import com.zagayevskiy.fussball.api.request.NewGameRequest;
+import com.zagayevskiy.fussball.utils.GravatarResolver;
+import com.zagayevskiy.fussball.utils.GravatarResolver.SimpleOnResolveListener;
 
 public class NewGameFragment extends Fragment implements View.OnClickListener, ResultListener {
 
@@ -25,26 +29,34 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 	private static final int REQUEST_SELECT_PLAYER1 = 1;
 	private static final int REQUEST_SELECT_PLAYER2 = 2;
 	
-	private Button mSelectPlayer1, mSelectPlayer2, mButtonOk;
+	private Button mButtonOk;
+	private TextView mPlayer1Nick, mPlayer2Nick;
+	private ImageView mPlayer1Photo, mPlayer2Photo;
 	private EditText mScore1, mScore2;
 	private ProgressDialog mProgressDialog;
 	
 	private Player mPlayer1, mPlayer2;
+	
+	private GravatarResolver mGravatar = GravatarResolver.getInstance();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		View v = inflater.inflate(R.layout.new_game_fragment, container, false);
 		
-		mSelectPlayer1 = (Button) v.findViewById(R.id.select_player1);
-		mSelectPlayer2 = (Button) v.findViewById(R.id.select_player2);
-		mButtonOk = (Button) v.findViewById(R.id.ok);
+		mPlayer1Nick = (TextView) v.findViewById(R.id.player1_nick);
+		mPlayer2Nick = (TextView) v.findViewById(R.id.player2_nick);	
+		
+		mPlayer1Photo = (ImageView) v.findViewById(R.id.player1_photo);
+		mPlayer2Photo = (ImageView) v.findViewById(R.id.player2_photo);
 		
 		mScore1 = (EditText) v.findViewById(R.id.player1_score);
 		mScore2 = (EditText) v.findViewById(R.id.player2_score);
 		
-		mSelectPlayer1.setOnClickListener(this);
-		mSelectPlayer2.setOnClickListener(this);
+		mButtonOk = (Button) v.findViewById(R.id.ok);
+		
+		v.findViewById(R.id.select_player1).setOnClickListener(this);
+		v.findViewById(R.id.select_player2).setOnClickListener(this);
 		mButtonOk.setOnClickListener(this);
 		
 		mProgressDialog = new ProgressDialog(getActivity());
@@ -153,7 +165,10 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 			return;
 		}
 		mPlayer1 = player;
-		mSelectPlayer1.setText(player.getNick());
+		mPlayer1Nick.setText(player.getNick());
+		mGravatar.resolve(getActivity(), player.getEmailHash(), 0, 
+			new SimpleOnResolveListener(mPlayer1Photo));
+		
 	}
 	
 	private void setPlayer2(Player player){
@@ -161,7 +176,9 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 			return; 
 		}
 		mPlayer2 = player;
-		mSelectPlayer2.setText(player.getNick());
+		mPlayer2Nick.setText(player.getNick());
+		mGravatar.resolve(getActivity(), player.getEmailHash(), 1, 
+				new SimpleOnResolveListener(mPlayer2Photo));
 	}
 
 	@Override

@@ -4,18 +4,64 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/select_player1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/select_player1" />
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="2" >
 
-    <Button
-        android:id="@+id/select_player2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/select_player2" />
+        <RelativeLayout
+            android:id="@+id/select_player1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/card_background"
+            android:clickable="true"
+            android:padding="10dp" >
 
+            <ImageView
+                android:id="@+id/player1_photo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/players_list_item_height"
+                android:src="@drawable/ic_launcher" />
+
+            <TextView
+                android:id="@+id/player1_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/player1_photo"
+                android:layout_centerHorizontal="true"
+                android:text="@string/select_player1" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/select_player2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/card_background"
+            android:clickable="true"
+            android:padding="10dp" >
+
+            <ImageView
+                android:id="@+id/player2_photo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/players_list_item_height"
+                android:src="@drawable/ic_launcher" />
+
+            <TextView
+                android:id="@+id/player2_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/player2_photo"
+                android:layout_centerHorizontal="true"
+                android:text="@string/select_player2" />
+        </RelativeLayout>
+    </LinearLayout>
+    
     <EditText
         android:id="@+id/player1_score"
         android:layout_width="match_parent"
@@ -41,7 +87,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/ok" 
-        android:padding="5dp"/>
+        android:padding="5dp"
+        android:background="@drawable/card_background"
+        android:text="@string/ok" />
 
 </LinearLayout>

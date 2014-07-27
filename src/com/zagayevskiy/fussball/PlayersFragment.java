@@ -46,8 +46,8 @@ public class PlayersFragment extends ListFragment implements LoaderManager.Loade
 		ListView list = getListView();
 	        
         if(list.getHeaderViewsCount() == 0){
-	        list.addHeaderView(new View(getActivity()));
-	        list.addFooterView(new View(getActivity()));
+//	        list.addHeaderView(new View(getActivity()));
+//	        list.addFooterView(new View(getActivity()));
         }
 		
 	}
