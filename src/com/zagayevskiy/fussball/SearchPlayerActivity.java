@@ -62,7 +62,7 @@ public class SearchPlayerActivity extends ListActivity implements LoaderManager.
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		return new CursorLoader(this, Player.URI, Player.SEARCH_PROJECTION, selection, selectionArgs, null);
+		return new CursorLoader(this, Player.URI, Player.SEARCH_PROJECTION, selection, selectionArgs, Player.ORDER_NICK_ASC);
 	} 
 
 	@Override
