@@ -1,6 +1,7 @@
 .settings/
 .externalToolBuilders/
 .classpath
+lint.xml
 bin/
 release/
 obj/

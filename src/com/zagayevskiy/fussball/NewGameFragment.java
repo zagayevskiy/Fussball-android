@@ -69,6 +69,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 				setPlayer2(Player.getOwner(getActivity()));
 			}
 		}
+		setRetainInstance(true);
 		
 		return v;
 	}

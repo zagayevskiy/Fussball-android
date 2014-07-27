@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 
 public class ProfileActivity extends FragmentActivity implements IApiManager{
 	
@@ -39,6 +41,7 @@ public class ProfileActivity extends FragmentActivity implements IApiManager{
 			.commitAllowingStateLoss();
 			
 		mApi = new ApiConnection(null, this);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	@Override
@@ -52,9 +55,26 @@ public class ProfileActivity extends FragmentActivity implements IApiManager{
 		mApi.unbind();
 		super.onStop();
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				goUp();
+				return true;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 	@Override
 	public ApiConnection getApi() {
 		return mApi;
+	}
+	
+	private void goUp(){
+		NavUtils.navigateUpFromSameTask(this);
 	}
 }

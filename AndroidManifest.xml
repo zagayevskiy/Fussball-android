@@ -42,15 +42,33 @@
         </activity>
         <activity
             android:name="com.zagayevskiy.fussball.NewGameActivity"
-            android:exported="false" >
+            android:exported="false"
+            android:parentActivityName="com.zagayevskiy.fussball.MainActivity" >
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.myfirstapp.MainActivity" />
         </activity>
         <activity
             android:name="com.zagayevskiy.fussball.SearchPlayerActivity"
-            android:exported="false" >
+            android:exported="false"
+            android:parentActivityName="com.zagayevskiy.fussball.NewGameActivity" >
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.myfirstapp.NewGameActivity" />
         </activity>
         <activity
             android:name="com.zagayevskiy.fussball.ProfileActivity"
-            android:exported="false" >
+            android:exported="false"
+            android:parentActivityName="com.zagayevskiy.fussball.MainActivity" >
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.myfirstapp.MainActivity" />
         </activity>
 
         <service
@@ -71,7 +89,7 @@
         <receiver android:name="com.zagayevskiy.fussball.widget.RatingWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.zagayevskiy.fussball.action.PLAYERS_LIST_LOADED"/>
+                <action android:name="com.zagayevskiy.fussball.action.PLAYERS_LIST_LOADED" />
             </intent-filter>
 
             <meta-data

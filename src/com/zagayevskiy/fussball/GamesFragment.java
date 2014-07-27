@@ -10,7 +10,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -74,6 +73,7 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 		mRefreshLayout.setColorSchemeResources(R.color.refresh1, R.color.refresh2, R.color.refresh3, R.color.refresh4);
 		
         setHasOptionsMenu(true);
+        setRetainInstance(true);
 		
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.games_list_item, null, FROM_COLUMNS, TO_VIEWS, 0);    
         mAdapter.setViewBinder(new GamesListViewBinder(getActivity()));
@@ -87,7 +87,7 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		MenuItem item = menu.add(R.string.menu_new_game);
 		item.setIcon(R.drawable.ic_action_new);
-		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 			
 			@Override

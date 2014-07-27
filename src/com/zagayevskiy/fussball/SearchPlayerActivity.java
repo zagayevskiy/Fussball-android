@@ -1,5 +1,6 @@
 package com.zagayevskiy.fussball;
 
+import android.app.ActionBar;
 import android.app.ListActivity;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
@@ -8,6 +9,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,14 +39,31 @@ public class SearchPlayerActivity extends ListActivity implements LoaderManager.
 		mAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, 0);
 		setListAdapter(mAdapter);
 		getLoaderManager().initLoader(0, null, this);
-		getActionBar().setTitle(R.string.select_player);
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle(R.string.select_player);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		getListView().setOnItemClickListener(this);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			goUp();
+			return true;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		return new CursorLoader(this, Player.URI, Player.SEARCH_PROJECTION, selection, selectionArgs, null);
-	}
+	} 
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
@@ -81,5 +100,9 @@ public class SearchPlayerActivity extends ListActivity implements LoaderManager.
 			
 			selection = String.format(Player.WHERE_ID_NOT_IN_FMT, builder.toString());
 		}		
+	}
+	
+	private void goUp(){
+		finish();
 	}
 }
