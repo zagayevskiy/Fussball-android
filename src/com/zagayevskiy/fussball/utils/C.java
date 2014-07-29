@@ -26,6 +26,8 @@ public final class C {
 	
 	public static final class api{
 		
+		public static final int MAX_SCORE = 10;
+		
 		public static final class url{
 			public static final String HOST = "http://212.154.168.144:5050/api/";
 			public static final String LOGIN = HOST + "login";

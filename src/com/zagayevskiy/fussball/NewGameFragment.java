@@ -10,19 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.NumberPicker.OnValueChangeListener;
 
 import com.zagayevskiy.fussball.api.IApiManager;
 import com.zagayevskiy.fussball.api.request.ApiBaseRequest;
 import com.zagayevskiy.fussball.api.request.ApiBaseRequest.ResultListener;
 import com.zagayevskiy.fussball.api.request.NewGameRequest;
+import com.zagayevskiy.fussball.utils.C;
 import com.zagayevskiy.fussball.utils.GravatarResolver;
 import com.zagayevskiy.fussball.utils.GravatarResolver.SimpleOnResolveListener;
 
-public class NewGameFragment extends Fragment implements View.OnClickListener, ResultListener {
+public class NewGameFragment extends Fragment implements View.OnClickListener, OnValueChangeListener, ResultListener {
 
 	public static final String TAG = NewGameFragment.class.getName();
 	
@@ -32,7 +34,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 	private Button mButtonOk;
 	private TextView mPlayer1Nick, mPlayer2Nick;
 	private ImageView mPlayer1Photo, mPlayer2Photo;
-	private EditText mScore1, mScore2;
+	private NumberPicker mScore1, mScore2;
 	private ProgressDialog mProgressDialog;
 	
 	private Player mPlayer1, mPlayer2;
@@ -50,14 +52,21 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 		mPlayer1Photo = (ImageView) v.findViewById(R.id.player1_photo);
 		mPlayer2Photo = (ImageView) v.findViewById(R.id.player2_photo);
 		
-		mScore1 = (EditText) v.findViewById(R.id.player1_score);
-		mScore2 = (EditText) v.findViewById(R.id.player2_score);
+		mScore1 = ((NumberPicker) v.findViewById(R.id.player1_score));
+		mScore1.setMinValue(0);
+		mScore1.setMaxValue(10);
+		mScore1.setOnValueChangedListener(this);
+		
+		mScore2 = ((NumberPicker) v.findViewById(R.id.player2_score));
+		mScore2.setMinValue(0);
+		mScore2.setMaxValue(C.api.MAX_SCORE);
+		mScore2.setOnValueChangedListener(this);
 		
 		mButtonOk = (Button) v.findViewById(R.id.ok);
+		mButtonOk.setOnClickListener(this);
 		
 		v.findViewById(R.id.select_player1).setOnClickListener(this);
-		v.findViewById(R.id.select_player2).setOnClickListener(this);
-		mButtonOk.setOnClickListener(this);
+		v.findViewById(R.id.select_player2).setOnClickListener(this);		
 		
 		mProgressDialog = new ProgressDialog(getActivity());
 		mProgressDialog.setCancelable(false);
@@ -81,7 +90,7 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 				setPlayer2(Player.getOwner(getActivity()));
 			}
 		}
-		setRetainInstance(true);
+		setRetainInstance(false);		
 		
 		return v;
 	}
@@ -112,22 +121,21 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 			startActivityForResult(intent, requestCode);
 		}else if(id == R.id.ok){
 			
+			final int score1 = mScore1.getValue();
+			final int score2 = mScore2.getValue();
+			
 			//TODO: FIXME it's not okay, just simple bug fix
-			if(mScore1.getText().length() == 0 
-				||mScore2.getText().length() == 0
+			if(	(score1 < C.api.MAX_SCORE && score2 < C.api.MAX_SCORE)
+				|| (score1 == C.api.MAX_SCORE && score2 == C.api.MAX_SCORE)
 				|| mPlayer1 == null 
-				|| mPlayer2 == null
-				|| mScore1.getText().toString().equals(mScore2.getText().toString())){
+				|| mPlayer2 == null){
 				Toast.makeText(getActivity(), "Something wrong in your data, yo!", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			
-			final int s1 = Integer.parseInt(mScore1.getText().toString());
-			final int s2 = Integer.parseInt(mScore2.getText().toString());
-			
 			mProgressDialog.show();
 			
-			Game game = new Game(mPlayer1.getNick(), mPlayer2.getNick(), s1, s2);
+			Game game = new Game(mPlayer1.getNick(), mPlayer2.getNick(), score1, score2);
 			((IApiManager) getActivity()).getApi().request(new NewGameRequest(this, game), 0);
 		}
 	}
@@ -190,6 +198,19 @@ public class NewGameFragment extends Fragment implements View.OnClickListener, R
 			Toast.makeText(getActivity(), "Can't save game: network error", Toast.LENGTH_LONG).show();
 		}else{
 			Toast.makeText(getActivity(), "Can't save game", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	@Override
+	public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+		if(picker.getId() == mScore1.getId()){
+			if(mScore1.getValue() < C.api.MAX_SCORE){
+				mScore2.setValue(C.api.MAX_SCORE);
+			}
+		}else if(picker.getId() == mScore2.getId()){
+			if(mScore2.getValue() < C.api.MAX_SCORE){
+				mScore1.setValue(C.api.MAX_SCORE);
+			}
 		}
 	}
 }

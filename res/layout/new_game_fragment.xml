@@ -61,34 +61,36 @@
                 android:text="@string/select_player2" />
         </RelativeLayout>
     </LinearLayout>
-    
-    <EditText
-        android:id="@+id/player1_score"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:digits="0123456789"
-        android:gravity="center_horizontal"
-        android:hint="@string/hint_player1_score"
-        android:inputType="number"
-        android:maxLength="2" />
 
-    <EditText
-        android:id="@+id/player2_score"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:digits="0123456789"
-        android:gravity="center_horizontal"
-        android:hint="@string/hint_player2_score"
-        android:inputType="number"
-        android:maxLength="2" />
+        android:weightSum="2" >
+
+        <NumberPicker
+            android:id="@+id/player1_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:padding="10dp" />
+
+        <NumberPicker
+            android:id="@+id/player2_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:padding="10dp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:padding="5dp"
         android:background="@drawable/card_background"
+        android:padding="5dp"
         android:text="@string/ok" />
 
 </LinearLayout>
