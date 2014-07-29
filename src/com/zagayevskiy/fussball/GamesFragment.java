@@ -85,7 +85,7 @@ public class GamesFragment extends ListFragment implements LoaderManager.LoaderC
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		MenuItem item = menu.add(R.string.menu_new_game);
+		MenuItem item = menu.add(R.string.title_new_game);
 		item.setIcon(R.drawable.ic_action_new);
 		item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		item.setOnMenuItemClickListener(new OnMenuItemClickListener() {

@@ -3,6 +3,7 @@ package com.zagayevskiy.fussball;
 import com.zagayevskiy.fussball.api.ApiConnection;
 import com.zagayevskiy.fussball.api.IApiManager;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,7 +42,9 @@ public class ProfileActivity extends FragmentActivity implements IApiManager{
 			.commitAllowingStateLoss();
 			
 		mApi = new ApiConnection(null, this);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(String.format(getString(R.string.title_profile_fmt), nick));
 	}
 	
 	@Override

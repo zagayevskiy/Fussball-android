@@ -4,6 +4,7 @@ import com.zagayevskiy.fussball.api.ApiConnection;
 import com.zagayevskiy.fussball.api.ApiConnection.IBindUnbindListener;
 import com.zagayevskiy.fussball.api.IApiManager;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -24,7 +25,9 @@ public class NewGameActivity extends FragmentActivity implements IApiManager, IB
 		super.onCreate(savedInstanceState);
 		mApi = new ApiConnection(this, this);
 		setContentView(R.layout.new_game_activity);
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(R.string.title_new_game);
 	}
 	
 	@Override
