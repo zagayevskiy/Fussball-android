@@ -38,8 +38,8 @@ public class ProfileActivity extends FragmentActivity implements IApiManager{
 		fragment.setArguments(args);
 		
 		getSupportFragmentManager().beginTransaction()
-			.add(R.id.container, fragment)
-			.commitAllowingStateLoss();
+			.replace(R.id.container, fragment)
+			.commit();
 			
 		mApi = new ApiConnection(null, this);
 		ActionBar actionBar = getActionBar();
